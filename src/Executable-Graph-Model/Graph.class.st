@@ -70,6 +70,7 @@ Graph >> nodes: obj [
 
 { #category : #'as yet unclassified' }
 Graph >> predecessorOf: aNode [
+"test"
 	^(self edges select: [ :edge | edge value = aNode ]) collect: [ :edge | edge key ]
 
 
