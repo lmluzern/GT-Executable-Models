@@ -25,7 +25,10 @@ Graph class >> eg10nodes [
 
 { #category : #adding }
 Graph >> addNode [
-	self nodes add: self nodes last + 1.
+	| newNode |
+	newNode := self nodes last + 1.
+	self nodes add: newNode.
+	^newNode
 ]
 
 { #category : #accessing }

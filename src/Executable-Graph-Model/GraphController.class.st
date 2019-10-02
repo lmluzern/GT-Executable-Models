@@ -7,28 +7,11 @@ Class {
 	#instVars : [
 		'graph',
 		'view',
-		'viewNodes'
+		'viewNodes',
+		'mondrianRoot'
 	],
 	#category : #'Executable-Graph-Model'
 }
-
-{ #category : #'as yet unclassified' }
-GraphController >> clearAllStates [
-	viewNodes do: [ :node | node background: Color white ]
-]
-
-{ #category : #'view control' }
-GraphController >> deadColor [
-	^ Color red
-]
-
-{ #category : #'accessing colors' }
-GraphController >> edgeColor [
-	(self graph successorOf: self graph currentState) isEmpty
-		ifTrue: [ ^self deadColor ]
-		ifFalse: [ ^self liveColor ]
-		
-]
 
 { #category : #accessing }
 GraphController >> graph [
@@ -44,46 +27,19 @@ GraphController >> graph: anObject [
 GraphController >> initializeModel: aGraph andView: aView [
 	graph := aGraph.
 	view := aView.
-	viewNodes := view children select: [ :each | each graph isNode ].
-	viewNodes
-		do: [ :aNode | aNode when: BlClickEvent do: [ self onClick: aNode ] ].
-	"self setCurrentStateColor."
-	self update: aGraph.
-]
-
-{ #category : #'view control' }
-GraphController >> liveColor [
-	^ (Color green darker alpha: 1)
-]
-
-{ #category : #'as yet unclassified' }
-GraphController >> markSuccessorStates [
-	| successors |
-	successors := self graph successorOf: self graph currentState.
-	(viewNodes select: [ :node | successors includes: node graph model ])  do:
-		[ :node | node background: Color blue ]
-
+	mondrianRoot := view mondrian root.
+	viewNodes := mondrianRoot children select: [ :each | each graph isNode ].
 ]
 
 { #category : #initialization }
 GraphController >> onClick: aNode [
 	| node |
+	
+	self graph addNode.
+	
 	node := aNode graph model.
 	((graph successorOf: graph currentState) includes: node)
 		ifTrue: [ graph currentState: node.].
-]
-
-{ #category : #initialization }
-GraphController >> setCurrentStateColor [
-	(viewNodes detect:
-		[ :node | node graph model = graph currentState ]) background: self edgeColor
-]
-
-{ #category : #updating }
-GraphController >> update: aGraph [
-	self clearAllStates.
-	self markSuccessorStates.
-	self setCurrentStateColor.
 ]
 
 { #category : #accessing }
@@ -94,4 +50,14 @@ GraphController >> view [
 { #category : #accessing }
 GraphController >> view: anObject [
 	view := anObject
+]
+
+{ #category : #accessing }
+GraphController >> viewNodes [
+	^ viewNodes
+]
+
+{ #category : #accessing }
+GraphController >> viewNodes: anObject [
+	viewNodes := anObject
 ]

@@ -4,6 +4,9 @@ This class visualizes graphs.
 Class {
 	#name : #GraphViewBuilder,
 	#superclass : #Object,
+	#instVars : [
+		'mondrian'
+	],
 	#category : #'Executable-Graph-Model'
 }
 
@@ -44,10 +47,20 @@ GraphViewBuilder >> directedCurvedEdge [
 						build))
 ]
 
+{ #category : #accessing }
+GraphViewBuilder >> mondrian [
+	^ mondrian
+]
+
+{ #category : #accessing }
+GraphViewBuilder >> mondrian: anObject [
+	mondrian := anObject
+]
+
 { #category : #ui }
 GraphViewBuilder >> viewFor: aGraph [
 
-	| mondrian controller |
+	"| mondrian controller |
 	mondrian := GtMondrian new.
 	mondrian nodes
 		shape: [ :x | self borderCircleWithLabel: x asString ];
@@ -59,15 +72,15 @@ GraphViewBuilder >> viewFor: aGraph [
 		connectToAll: [:x | (aGraph edges select: [ :each | each key = x ]) collect:
 			[ :each | each value] ].
 	mondrian layout circle.
-	controller := GraphController new initializeModel: aGraph andView: mondrian root.
+	controller := FSAgraphController new initializeModel: aGraph andView: mondrian root.
 	aGraph addDependent: controller.
-	^ mondrian
+	^ mondrian"
 ]
 
 { #category : #ui }
 GraphViewBuilder >> viewFor: aGraph with: aMondrian [
-
 	| controller |
+	mondrian := aMondrian.
 	aMondrian nodes
 		shape: [ :x | self borderCircleWithLabel: x asString ];
 		with: aGraph nodes.
@@ -78,7 +91,7 @@ GraphViewBuilder >> viewFor: aGraph with: aMondrian [
 		connectToAll: [:x | (aGraph edges select: [ :each | each key = x ]) collect:
 			[ :each | each value] ].
 	aMondrian layout circle.
-	controller := GraphController new initializeModel: aGraph andView: aMondrian root.
+	controller := GraphModelerController new initializeModel: aGraph andView: self.
 	aGraph addDependent: controller.
 	^ aMondrian
 ]
