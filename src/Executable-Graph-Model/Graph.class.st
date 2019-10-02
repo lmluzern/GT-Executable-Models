@@ -23,6 +23,11 @@ Graph class >> eg10nodes [
 		currentState: 10
 ]
 
+{ #category : #adding }
+Graph >> addNode [
+	self nodes add: self nodes last + 1.
+]
+
 { #category : #accessing }
 Graph >> currentState [
 	^ currentState
