@@ -29,17 +29,13 @@ GraphController >> initializeModel: aGraph andView: aView [
 	view := aView.
 	mondrianRoot := view mondrian root.
 	viewNodes := mondrianRoot children select: [ :each | each graph isNode ].
+	viewNodes
+		do: [ :aNode | aNode when: BlClickEvent do: [ self onClick: aNode ] ].
 ]
 
 { #category : #initialization }
 GraphController >> onClick: aNode [
-	| node |
-	
-	self graph addNode.
-	
-	node := aNode graph model.
-	((graph successorOf: graph currentState) includes: node)
-		ifTrue: [ graph currentState: node.].
+
 ]
 
 { #category : #accessing }

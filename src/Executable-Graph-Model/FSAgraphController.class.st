@@ -28,8 +28,6 @@ FSAgraphController >> edgeColor [
 { #category : #initialization }
 FSAgraphController >> initializeModel: aGraph andView: aView [
 	super initializeModel: aGraph andView: aView.
-	viewNodes
-		do: [ :aNode | aNode when: BlClickEvent do: [ self onClick: aNode ] ].
 	self update: aGraph.
 ]
 

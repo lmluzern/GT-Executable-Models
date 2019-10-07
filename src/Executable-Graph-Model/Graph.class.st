@@ -24,6 +24,11 @@ Graph class >> eg10nodes [
 ]
 
 { #category : #adding }
+Graph >> addEdgeFrom: nodeA to: nodeB [
+	^ self edges add: (nodeA->nodeB)
+]
+
+{ #category : #adding }
 Graph >> addNode [
 	| newNode |
 	newNode := self nodes last + 1.
