@@ -25,7 +25,9 @@ Graph class >> eg10nodes [
 
 { #category : #adding }
 Graph >> addEdgeFrom: nodeA to: nodeB [
-	^ self edges add: (nodeA->nodeB)
+	(edges includes: (nodeA->nodeB))
+		ifFalse: [ ^ self edges add: (nodeA->nodeB) ].
+	^ 0
 ]
 
 { #category : #adding }
@@ -69,8 +71,8 @@ Graph >> gtElement: aView [
 
 { #category : #initialization }
 Graph >> initialize [
-	nodes:= Set new.
-	edges:= Set new.
+	nodes:= OrderedCollection new.
+	edges:= OrderedCollection new.
 ]
 
 { #category : #accessing }

@@ -5,6 +5,7 @@ Class {
 	#name : #GraphModelerController,
 	#superclass : #GraphController,
 	#instVars : [
+		'selectedNode',
 		'fromNode'
 	],
 	#category : #'Executable-Graph-Model'
@@ -22,10 +23,15 @@ GraphModelerController >> onClick: aNode [
 	| node |
 	node := aNode graph model.
 	fromNode > 0
-		ifTrue: [ graph addEdgeFrom: fromNode to: node.
-			fromNode:=0 ]
-		ifFalse: [ fromNode := node.
+		ifTrue: [
+			graph addEdgeFrom: fromNode to: node.
+			fromNode:=0.
+			selectedNode background: Color white.
+			]
+		ifFalse: [
+			fromNode := node.
 			aNode background: Color blue.
+			selectedNode := aNode.
 			].
 ]
 
