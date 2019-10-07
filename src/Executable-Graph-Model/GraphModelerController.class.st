@@ -24,7 +24,8 @@ GraphModelerController >> onClick: aNode [
 	node := aNode graph model.
 	fromNode > 0
 		ifTrue: [
-			graph addEdgeFrom: fromNode to: node.
+			view drawEdges: 
+			(graph addEdgeFrom: fromNode to: node) asOrderedCollection.
 			fromNode:=0.
 			selectedNode background: Color white.
 			]
@@ -38,5 +39,8 @@ GraphModelerController >> onClick: aNode [
 { #category : #'as yet unclassified' }
 GraphModelerController >> onDoubleClick: anObject [
 	| newNode |
-	newNode = self graph addNode.
+	newNode := self graph addNode.
+	self view drawNodes: newNode asOrderedCollection.
+	super initializeModel: graph andView: view.
+	
 ]

@@ -47,6 +47,23 @@ GraphViewBuilder >> directedCurvedEdge [
 						build))
 ]
 
+{ #category : #'as yet unclassified' }
+GraphViewBuilder >> drawEdges: edgeList [
+	mondrian edges
+	shape: [ :edge | self directedCurvedEdge ];
+	fromNearestTightCircle;
+	toNearestTightCircle;
+	connectToAll: [:x | (edgeList select: [ :each | each key = x ]) collect:
+			[ :each | each value] ].
+]
+
+{ #category : #'as yet unclassified' }
+GraphViewBuilder >> drawNodes: nodeList [
+	mondrian nodes
+	shape: [ :x | self borderCircleWithLabel: x asString ];
+	with: nodeList.
+]
+
 { #category : #accessing }
 GraphViewBuilder >> mondrian [
 	^ mondrian
@@ -81,15 +98,17 @@ GraphViewBuilder >> viewFor: aGraph [
 GraphViewBuilder >> viewFor: aGraph with: aMondrian [
 	| controller |
 	mondrian := aMondrian.
-	aMondrian nodes
+	self drawNodes: aGraph nodes.
+"	aMondrian nodes
 		shape: [ :x | self borderCircleWithLabel: x asString ];
-		with: aGraph nodes.
-	aMondrian edges
+		with: aGraph nodes."
+	self drawEdges: aGraph edges.
+	"aMondrian edges
 		shape: [ :edge | self directedCurvedEdge ];
 		fromNearestTightCircle;
 		toNearestTightCircle;
 		connectToAll: [:x | (aGraph edges select: [ :each | each key = x ]) collect:
-			[ :each | each value] ].
+			[ :each | each value] ]."
 	aMondrian layout circle.
 	controller := GraphModelerController new initializeModel: aGraph andView: self.
 	aGraph addDependent: controller.
