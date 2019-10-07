@@ -31,9 +31,11 @@ Graph >> addEdgeFrom: nodeA to: nodeB [
 { #category : #adding }
 Graph >> addNode [
 	| newNode |
-	newNode := self nodes last + 1.
+	nodes isEmpty
+		ifTrue: [ newNode := 1 ]
+		ifFalse: [ newNode := nodes last + 1 ].
 	self nodes add: newNode.
-	^newNode
+	^ newNode
 ]
 
 { #category : #accessing }
