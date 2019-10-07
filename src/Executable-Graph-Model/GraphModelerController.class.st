@@ -19,12 +19,14 @@ GraphModelerController >> initializeModel: aGraph andView: aView [
 
 { #category : #initialization }
 GraphModelerController >> onClick: aNode [
-	| toNode |
-	toNode := aNode graph model.
+	| node |
+	node := aNode graph model.
 	fromNode > 0
-		ifTrue: [ graph addEdgeFrom: fromNode to: toNode.
+		ifTrue: [ graph addEdgeFrom: fromNode to: node.
 			fromNode:=0 ]
-		ifFalse: [ fromNode := toNode ].
+		ifFalse: [ fromNode := node.
+			aNode background: Color blue.
+			].
 ]
 
 { #category : #'as yet unclassified' }
