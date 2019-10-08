@@ -22,15 +22,15 @@ GraphModelerController >> initializeModel: aGraph andView: aView [
 GraphModelerController >> onClick: aNode [
 	| node |
 	node := aNode graph model.
-	fromNode > 0
+	(graph currentState > 0)
 		ifTrue: [
 			view drawEdges: 
-			(graph addEdgeFrom: fromNode to: node) asOrderedCollection.
-			fromNode:=0.
+			(graph addEdgeFrom: graph currentState to: node) asOrderedCollection.
+			graph currentState: 0.
 			selectedNode background: Color white.
 			]
 		ifFalse: [
-			fromNode := node.
+			graph currentState: node.
 			aNode background: Color blue.
 			selectedNode := aNode.
 			].

@@ -73,6 +73,7 @@ Graph >> gtElement: aView [
 Graph >> initialize [
 	nodes:= OrderedCollection new.
 	edges:= OrderedCollection new.
+	currentState := 0.
 ]
 
 { #category : #accessing }
