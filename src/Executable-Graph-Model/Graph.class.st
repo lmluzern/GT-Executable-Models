@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'nodes',
 		'edges',
-		'currentState'
+		'currentState',
+		'debug'
 	],
 	#category : #'Executable-Graph-Model'
 }
@@ -49,6 +50,16 @@ Graph >> currentState [
 Graph >> currentState: anObject [
 	currentState := anObject.
 	self changed.
+]
+
+{ #category : #accessing }
+Graph >> debug [
+	^ debug
+]
+
+{ #category : #accessing }
+Graph >> debug: anObject [
+	debug := anObject
 ]
 
 { #category : #accessing }

@@ -7,8 +7,7 @@ Class {
 	#instVars : [
 		'graph',
 		'view',
-		'viewNodes',
-		'mondrianRoot'
+		'viewNodes'
 	],
 	#category : #'Executable-Graph-Model'
 }
@@ -27,8 +26,7 @@ GraphController >> graph: anObject [
 GraphController >> initializeModel: aGraph andView: aView [
 	graph := aGraph.
 	view := aView.
-	mondrianRoot := view mondrian root.
-	viewNodes := mondrianRoot children select: [ :each | each graph isNode ].
+	viewNodes := view mondrian root children select: [ :each | each graph isNode ].
 	viewNodes
 		do: [ :aNode | aNode when: BlClickEvent do: [ self onClick: aNode ] ].
 ]
