@@ -14,7 +14,7 @@ Class {
 GraphModelerController >> initializeModel: aGraph andView: aView [
 	super initializeModel: aGraph andView: aView.
 	graph currentState: 0.
-	view mondrian root when: BlDoubleClickEvent do: [ self onDoubleClick: view ].
+	view mondrian root when: BlDoubleClickEvent do: [ :event | self onDoubleClick: view with: event localPosition ].
 ]
 
 { #category : #initialization }
@@ -42,5 +42,16 @@ GraphModelerController >> onDoubleClick: anObject [
 	newNode := self graph addNode.
 	self view drawNodes: newNode asOrderedCollection.
 	view mondrian root graph nodeAt: newNode put: (view mondrian root children last).
+	
+]
+
+{ #category : #'as yet unclassified' }
+GraphModelerController >> onDoubleClick: anObject with: mousePosition [
+	| newNode blNode |
+	newNode := self graph addNode.
+	self view drawNodes: newNode asOrderedCollection.
+	blNode := (view mondrian root children last).
+	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
+	view mondrian root graph nodeAt: newNode put: blNode.
 	
 ]
