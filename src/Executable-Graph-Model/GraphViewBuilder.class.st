@@ -7,24 +7,29 @@ Class {
 	#instVars : [
 		'mondrian'
 	],
+	#classVars : [
+		'controller'
+	],
 	#category : #'Executable-Graph-Model'
 }
 
 { #category : #utilities }
 GraphViewBuilder >> borderCircleWithLabel: aString [
-	^ BlElement new
+	| node |
+	node := BlElement new
 		layout: BlFrameLayout new;
 		border: (BlBorder paint: Color black);
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
+		addEventHandlerOn: BlClickEvent do: [ controller onClick: node ];
 		addChild:
 			(BlTextElement new
 				text: aString asRopedText;
 				constraintsDo: [ :c | 
 					c frame horizontal alignCenter.
 					c frame vertical alignCenter ];
-				yourself);
-		yourself
+				yourself).
+		^ node.
 ]
 
 { #category : #ui }
@@ -96,9 +101,10 @@ GraphViewBuilder >> viewFor: aGraph [
 
 { #category : #ui }
 GraphViewBuilder >> viewFor: aGraph with: aMondrian [
-	| controller |
 	mondrian := aMondrian.
 	self drawNodes: aGraph nodes.
+	controller := GraphModelerController new initializeModel: aGraph andView: self.
+	aGraph addDependent: controller.
 "	aMondrian nodes
 		shape: [ :x | self borderCircleWithLabel: x asString ];
 		with: aGraph nodes."
@@ -110,7 +116,6 @@ GraphViewBuilder >> viewFor: aGraph with: aMondrian [
 		connectToAll: [:x | (aGraph edges select: [ :each | each key = x ]) collect:
 			[ :each | each value] ]."
 	aMondrian layout circle.
-	controller := GraphModelerController new initializeModel: aGraph andView: self.
-	aGraph addDependent: controller.
+
 	^ aMondrian
 ]

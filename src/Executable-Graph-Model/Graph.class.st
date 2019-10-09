@@ -85,6 +85,7 @@ Graph >> initialize [
 	nodes:= OrderedCollection new.
 	edges:= OrderedCollection new.
 	currentState := 0.
+	debug := 0.
 ]
 
 { #category : #accessing }

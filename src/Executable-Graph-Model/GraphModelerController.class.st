@@ -21,7 +21,7 @@ GraphModelerController >> initializeModel: aGraph andView: aView [
 GraphModelerController >> onClick: aNode [
 	| node |
 	node := aNode graph model.
-	graph debug: node.
+	graph debug: view mondrian.
 	(graph currentState > 0)
 		ifTrue: [
 			view drawEdges: 
@@ -42,6 +42,5 @@ GraphModelerController >> onDoubleClick: anObject [
 	newNode := self graph addNode.
 	self view drawNodes: newNode asOrderedCollection.
 	view mondrian root graph nodeAt: newNode put: (view mondrian root children last).
-	super initializeModel: graph andView: view.
 	
 ]
