@@ -21,8 +21,11 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 		border: (BlBorder paint: Color black);
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
-		addEventHandlerOn: BlClickEvent do: [ :event | 
-			 controller addEdge: node ];
+		addEventHandlerOn: BlClickEvent do: [ :event |
+			event primaryButtonPressed ifTrue: [ 
+				controller controllerMode == 0
+					ifTrue: [ controller openPrimaryMenuWith: node ]
+					ifFalse: [ controller onClick: node ]]];
 		addChild:
 			(BlTextElement new
 				text: aString asRopedText;

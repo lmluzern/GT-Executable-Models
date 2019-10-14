@@ -8,7 +8,8 @@ Class {
 		'graph',
 		'view',
 		'viewNodes',
-		'selectedNode'
+		'selectedNode',
+		'controllerMode'
 	],
 	#category : #'Executable-Graph-Model'
 }
@@ -43,6 +44,26 @@ GraphController >> addNodeAt: mousePosition [
 	
 ]
 
+{ #category : #'as yet unclassified' }
+GraphController >> clearAllStates [
+	viewNodes do: [ :node | node background: Color white ]
+]
+
+{ #category : #accessing }
+GraphController >> controllerMode [
+	^ controllerMode
+]
+
+{ #category : #accessing }
+GraphController >> controllerMode: anObject [
+	controllerMode := anObject
+]
+
+{ #category : #'view control' }
+GraphController >> deadColor [
+	^ Color red
+]
+
 { #category : #accessing }
 GraphController >> graph [
 	^ graph
@@ -57,6 +78,7 @@ GraphController >> graph: anObject [
 GraphController >> initializeModel: aGraph andView: aView [
 	graph := aGraph.
 	view := aView.
+	controllerMode := 0.
 	viewNodes := view mondrian root children select: [ :each | each graph isNode ].
 	
 	"viewNodes
@@ -66,9 +88,33 @@ GraphController >> initializeModel: aGraph andView: aView [
 		event secondaryButtonPressed ifTrue: [ self openSecondaryMenuWith: event localPosition ].].
 ]
 
+{ #category : #'view control' }
+GraphController >> liveColor [
+	^ (Color green darker alpha: 1)
+]
+
+{ #category : #'as yet unclassified' }
+GraphController >> markSuccessorStates [
+	| successors |
+	successors := self graph successorOf: self graph currentState.
+	(viewNodes select: [ :node | successors includes: node graph model ])  do:
+		[ :node | node background: Color blue ]
+]
+
+{ #category : #'as yet unclassified' }
+GraphController >> nodeColor [
+	(self graph successorOf: self graph currentState) isEmpty
+		ifTrue: [ ^self deadColor ]
+		ifFalse: [ ^self liveColor ]
+		
+]
+
 { #category : #initialization }
 GraphController >> onClick: aNode [
-
+	| node |
+	node := aNode graph model.
+	((graph successorOf: graph currentState) includes: node)
+		ifTrue: [ graph currentState: node.].
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,7 +122,7 @@ GraphController >> openPrimaryMenuWith: aNode [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Add edge from current selected node' selector: #addEdge: argument: aNode.
-
+	menu add: 'Set as initial state' selector: #setInitialState: argument: aNode.
 	menu popUpInWorld
 ]
 
@@ -85,9 +131,31 @@ GraphController >> openSecondaryMenuWith: mousePosition [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Add new node' selector: #addNodeAt: argument: mousePosition.
-	menu add: 'Executable FSA Model' selector: #addNodeAt: argument: mousePosition.
-	menu add: 'Graph Editor' selector: #addNodeAt: argument: mousePosition.
+	controllerMode == 0 ifTrue: [ menu add: 'Switch to executable FSA Model' selector: #controllerMode: argument:1.].
+	controllerMode == 1 ifTrue: [ menu add: 'Switch to Graph Editor' selector: #controllerMode: argument:0.].
 	menu popUpInWorld
+]
+
+{ #category : #initialization }
+GraphController >> setCurrentStateColor [
+	viewNodes := view mondrian root children select: [ :each | each graph isNode ].
+	self clearAllStates.
+	graph selectedNode: 0.
+	(viewNodes detect:
+		[ :node | node graph model = graph currentState ]) background: self nodeColor.
+]
+
+{ #category : #initialization }
+GraphController >> setInitialState: aNode [
+	graph currentState: aNode graph model.
+	self setCurrentStateColor.
+]
+
+{ #category : #updating }
+GraphController >> update: aGraph [
+	self clearAllStates.
+	self markSuccessorStates.
+	self setCurrentStateColor.
 ]
 
 { #category : #accessing }
