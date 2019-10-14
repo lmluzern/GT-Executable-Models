@@ -4,9 +4,6 @@ This class handles events/clicks especially for the interactive graph modeler.
 Class {
 	#name : #GraphModelerController,
 	#superclass : #GraphController,
-	#instVars : [
-		'selectedNode'
-	],
 	#category : #'Executable-Graph-Model'
 }
 
@@ -14,7 +11,9 @@ Class {
 GraphModelerController >> initializeModel: aGraph andView: aView [
 	super initializeModel: aGraph andView: aView.
 	graph currentState: 0.
-	view mondrian root when: BlDoubleClickEvent do: [ :event | self onDoubleClick: view with: event localPosition ].
+	view mondrian root when: BlMouseDownEvent do: [ :event |
+		event secondaryButtonPressed ifTrue: [ self openMenuWith: event localPosition ].
+ ].
 ]
 
 { #category : #initialization }
@@ -54,4 +53,25 @@ GraphModelerController >> onDoubleClick: anObject with: mousePosition [
 	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
 	view mondrian root graph nodeAt: newNode put: blNode.
 	
+]
+
+{ #category : #'as yet unclassified' }
+GraphModelerController >> onDoubleClickAt: mousePosition [
+	| newNode blNode |
+	newNode := self graph addNode.
+	self view drawNodes: newNode asOrderedCollection.
+	blNode := (view mondrian root children last).
+	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
+	view mondrian root graph nodeAt: newNode put: blNode.
+	
+]
+
+{ #category : #'as yet unclassified' }
+GraphModelerController >> openMenuWith: mousePosition [
+	| menu |
+	menu := MenuMorph new defaultTarget: self .
+	menu add: 'Add new node' selector: #onDoubleClickAt: argument: mousePosition.
+	menu add: 'Executable FSA Model' selector: #onDoubleClickAt: argument: mousePosition.
+	menu add: 'Graph Editor' selector: #onDoubleClickAt: argument: mousePosition.
+	menu popUpInWorld
 ]

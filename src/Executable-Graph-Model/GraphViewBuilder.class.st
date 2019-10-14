@@ -21,7 +21,8 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 		border: (BlBorder paint: Color black);
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
-		addEventHandlerOn: BlClickEvent do: [ controller onClick: node ];
+		addEventHandlerOn: BlClickEvent do: [ :event | 
+			 controller addEdge: node ];
 		addChild:
 			(BlTextElement new
 				text: aString asRopedText;
@@ -103,18 +104,9 @@ GraphViewBuilder >> viewFor: aGraph [
 GraphViewBuilder >> viewFor: aGraph with: aMondrian [
 	mondrian := aMondrian.
 	self drawNodes: aGraph nodes.
-	controller := GraphModelerController new initializeModel: aGraph andView: self.
+	controller := GraphController new initializeModel: aGraph andView: self.
 	aGraph addDependent: controller.
-"	aMondrian nodes
-		shape: [ :x | self borderCircleWithLabel: x asString ];
-		with: aGraph nodes."
 	self drawEdges: aGraph edges.
-	"aMondrian edges
-		shape: [ :edge | self directedCurvedEdge ];
-		fromNearestTightCircle;
-		toNearestTightCircle;
-		connectToAll: [:x | (aGraph edges select: [ :each | each key = x ]) collect:
-			[ :each | each value] ]."
 	aMondrian layout circle.
 
 	^ aMondrian

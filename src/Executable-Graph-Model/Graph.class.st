@@ -8,6 +8,7 @@ Class {
 		'nodes',
 		'edges',
 		'currentState',
+		'selectedNode',
 		'debug'
 	],
 	#category : #'Executable-Graph-Model'
@@ -85,6 +86,7 @@ Graph >> initialize [
 	nodes:= OrderedCollection new.
 	edges:= OrderedCollection new.
 	currentState := 0.
+	selectedNode := 0.
 	debug := 0.
 ]
 
@@ -104,6 +106,16 @@ Graph >> predecessorOf: aNode [
 	^(self edges select: [ :edge | edge value = aNode ]) collect: [ :edge | edge key ]
 
 
+]
+
+{ #category : #accessing }
+Graph >> selectedNode [
+	^ selectedNode
+]
+
+{ #category : #accessing }
+Graph >> selectedNode: anObject [
+	selectedNode := anObject
 ]
 
 { #category : #'as yet unclassified' }
