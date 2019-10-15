@@ -56,7 +56,7 @@ GraphViewBuilder >> directedCurvedEdge [
 						build))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 GraphViewBuilder >> drawEdges: edgeList [
 	mondrian edges
 	shape: [ :edge | self directedCurvedEdge ];
@@ -66,7 +66,7 @@ GraphViewBuilder >> drawEdges: edgeList [
 			[ :each | each value] ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #ui }
 GraphViewBuilder >> drawNodes: nodeList [
 	mondrian nodes
 	shape: [ :x | self borderCircleWithLabel: x asString ];

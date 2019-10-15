@@ -14,7 +14,7 @@ Class {
 	#category : #'Executable-Graph-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'model interaction' }
 GraphController >> addEdge: aNode [
 	| node |
 	node := aNode graph model.
@@ -44,7 +44,7 @@ GraphController >> addNodeAt: mousePosition [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'model interaction' }
 GraphController >> clearAllStates [
 	viewNodes do: [ :node | node background: Color white ]
 ]
@@ -93,7 +93,7 @@ GraphController >> liveColor [
 	^ (Color green darker alpha: 1)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'model interaction' }
 GraphController >> markSuccessorStates [
 	| successors |
 	successors := self graph successorOf: self graph currentState.
@@ -101,7 +101,7 @@ GraphController >> markSuccessorStates [
 		[ :node | node background: Color blue ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'model interaction' }
 GraphController >> nodeColor [
 	(self graph successorOf: self graph currentState) isEmpty
 		ifTrue: [ ^self deadColor ]
@@ -117,7 +117,7 @@ GraphController >> onClick: aNode [
 		ifTrue: [ graph currentState: node.].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'model interaction' }
 GraphController >> openPrimaryMenuWith: aNode [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
@@ -126,7 +126,7 @@ GraphController >> openPrimaryMenuWith: aNode [
 	menu popUpInWorld
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'model interaction' }
 GraphController >> openSecondaryMenuWith: mousePosition [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
