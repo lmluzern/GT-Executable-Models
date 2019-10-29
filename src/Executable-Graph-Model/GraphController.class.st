@@ -41,7 +41,6 @@ GraphController >> addNodeAt: mousePosition [
 	blNode := (view mondrian root children last).
 	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
 	view mondrian root graph nodeAt: newNode put: blNode.
-	
 ]
 
 { #category : #'model interaction' }
@@ -66,10 +65,9 @@ GraphController >> deadColor [
 
 { #category : #utilities }
 GraphController >> deleteNode: aNode [
-	graph debug: view mondrian root.	
 	graph deleteNode: aNode graph model.
 	view mondrian root removeChild: aNode.
-	
+	self updateEdges.
 ]
 
 { #category : #accessing }
@@ -165,6 +163,15 @@ GraphController >> update: aGraph [
 	self clearAllStates.
 	self markSuccessorStates.
 	self setCurrentStateColor.
+]
+
+{ #category : #'as yet unclassified' }
+GraphController >> updateEdges [
+	| edges |
+	edges := view mondrian root children select: [ :element | element graph isEdge ].
+	edges do: [ :edge |
+		(graph edges includes: (edge fromAnchor referenceElement graph model -> edge toAnchor referenceElement graph model))
+		ifFalse: [ view mondrian root removeChild: edge ]].
 ]
 
 { #category : #accessing }

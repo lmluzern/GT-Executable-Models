@@ -76,9 +76,15 @@ Graph >> debug: anObject [
 	debug := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+Graph >> deleteConnectedEdgesOf: aNode [
+	(edges select: [ :edge | edge value = aNode or: edge key = aNode]) do: [ :edge | edges remove: edge].
+]
+
 { #category : #utilities }
 Graph >> deleteNode: aNode [
 	nodes remove: aNode.
+	self deleteConnectedEdgesOf: aNode.
 ]
 
 { #category : #accessing }
