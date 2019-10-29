@@ -43,17 +43,23 @@ GraphViewBuilder >> defaultNodeSize [
 
 { #category : #ui }
 GraphViewBuilder >> directedCurvedEdge [
-	^ BlParabollaArcElement new
+	| edge |
+	edge := BlParabollaArcElement new
 		zIndex: 1;
-		curvatureFraction: 0.2;
-		border: (BlBorder paint: Color gray width: 2);
+		curvatureFraction: 0.0;
+		addEventHandlerOn: BlClickEvent do: [ :event |
+			event primaryButtonPressed ifTrue: [ 
+				controller controllerMode == 0
+					ifTrue: [ controller openPrimaryMenuWith: edge ]]];
+		border: (BlBorder paint: Color black width: 2);
 		toHead:
 			(BlArrowheadSimpleArrow new
 				border:
 					(BlBorder builder
-						paint: Color gray;
+						paint: Color black;
 						width: 2;
-						build))
+						build)).
+		^edge
 ]
 
 { #category : #ui }

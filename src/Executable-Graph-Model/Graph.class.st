@@ -81,6 +81,11 @@ Graph >> deleteConnectedEdgesOf: aNode [
 	(edges select: [ :edge | edge value = aNode or: edge key = aNode]) do: [ :edge | edges remove: edge].
 ]
 
+{ #category : #'as yet unclassified' }
+Graph >> deleteEdge: anEdge [
+	edges remove: anEdge.
+]
+
 { #category : #utilities }
 Graph >> deleteNode: aNode [
 	nodes remove: aNode.

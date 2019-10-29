@@ -63,6 +63,12 @@ GraphController >> deadColor [
 	^ Color red
 ]
 
+{ #category : #'as yet unclassified' }
+GraphController >> deleteEdge: anEdge [
+	graph deleteEdge: (anEdge fromAnchor referenceElement graph model -> anEdge toAnchor referenceElement graph model).
+	self updateEdges.
+]
+
 { #category : #utilities }
 GraphController >> deleteNode: aNode [
 	graph deleteNode: aNode graph model.
@@ -123,14 +129,30 @@ GraphController >> onClick: aNode [
 		ifTrue: [ graph currentState: node.].
 ]
 
-{ #category : #'model interaction' }
-GraphController >> openPrimaryMenuWith: aNode [
+{ #category : #'as yet unclassified' }
+GraphController >> openEdgeMenuFor: anEdge [
+	| menu |
+	menu := MenuMorph new defaultTarget: self .
+	menu add: 'Delete edge' selector: #deleteEdge: argument: anEdge.
+	menu popUpInWorld
+]
+
+{ #category : #'as yet unclassified' }
+GraphController >> openNodeMenuFor: aNode [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Add edge from current selected node' selector: #addEdge: argument: aNode.
 	menu add: 'Set as initial state' selector: #setInitialState: argument: aNode.
 	menu add: 'Delete node' selector: #deleteNode: argument: aNode.
 	menu popUpInWorld
+	
+]
+
+{ #category : #'model interaction' }
+GraphController >> openPrimaryMenuWith: aGraphElement [
+	(aGraphElement graph isNode)
+		ifTrue: [ self openNodeMenuFor: aGraphElement ]
+		ifFalse: [ self openEdgeMenuFor: aGraphElement ].
 ]
 
 { #category : #'model interaction' }
