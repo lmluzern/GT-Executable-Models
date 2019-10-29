@@ -64,6 +64,14 @@ GraphController >> deadColor [
 	^ Color red
 ]
 
+{ #category : #utilities }
+GraphController >> deleteNode: aNode [
+	graph debug: view mondrian root.	
+	graph deleteNode: aNode graph model.
+	view mondrian root removeChild: aNode.
+	
+]
+
 { #category : #accessing }
 GraphController >> graph [
 	^ graph
@@ -123,6 +131,7 @@ GraphController >> openPrimaryMenuWith: aNode [
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Add edge from current selected node' selector: #addEdge: argument: aNode.
 	menu add: 'Set as initial state' selector: #setInitialState: argument: aNode.
+	menu add: 'Delete node' selector: #deleteNode: argument: aNode.
 	menu popUpInWorld
 ]
 

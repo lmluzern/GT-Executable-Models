@@ -76,6 +76,11 @@ Graph >> debug: anObject [
 	debug := anObject
 ]
 
+{ #category : #utilities }
+Graph >> deleteNode: aNode [
+	nodes remove: aNode.
+]
+
 { #category : #accessing }
 Graph >> edges [
 	^ edges
