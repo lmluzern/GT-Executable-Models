@@ -21,6 +21,7 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 		border: (BlBorder paint: Color black);
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
+		addEventHandlerOn: BlMouseEvent do: [ controller updateEdges ];
 		addEventHandlerOn: BlClickEvent do: [ :event |
 			event primaryButtonPressed ifTrue: [ 
 				controller controllerMode == 0
@@ -51,13 +52,13 @@ GraphViewBuilder >> directedCurvedEdge [
 			event primaryButtonPressed ifTrue: [ 
 				controller controllerMode == 0
 					ifTrue: [ controller openPrimaryMenuWith: edge ]]];
-		border: (BlBorder paint: Color black width: 2);
+		border: (BlBorder paint: Color black width: 1);
 		toHead:
 			(BlArrowheadSimpleArrow new
 				border:
 					(BlBorder builder
 						paint: Color black;
-						width: 2;
+						width: 1;
 						build)).
 		^edge
 ]

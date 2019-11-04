@@ -191,9 +191,9 @@ GraphController >> update: aGraph [
 GraphController >> updateEdges [
 	| edges |
 	edges := view mondrian root children select: [ :element | element graph isEdge ].
-	edges do: [ :edge |
-		(graph edges includes: (edge fromAnchor referenceElement graph model -> edge toAnchor referenceElement graph model))
-		ifFalse: [ view mondrian root removeChild: edge ]].
+	edges do: [ :edge | view mondrian root removeChild: edge ].
+	
+	view drawEdges: graph edges.
 ]
 
 { #category : #accessing }
