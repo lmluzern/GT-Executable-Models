@@ -37,9 +37,28 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 		^ node.
 ]
 
+{ #category : #'as yet unclassified' }
+GraphViewBuilder >> convertToPlace: aNode [
+	aNode
+		removeChildren.
+]
+
+{ #category : #'as yet unclassified' }
+GraphViewBuilder >> convertToTransition: aNode [
+	aNode
+		geometry: BlRectangle new;
+		size: self defaultTransitionSize;
+		removeChildren.
+]
+
 { #category : #ui }
 GraphViewBuilder >> defaultNodeSize [
 	^ 20@20
+]
+
+{ #category : #'as yet unclassified' }
+GraphViewBuilder >> defaultTransitionSize [
+	^ 15@20
 ]
 
 { #category : #ui }

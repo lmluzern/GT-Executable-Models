@@ -21,8 +21,9 @@ GraphController >> addEdge: aNode [
 	graph debug: view mondrian.
 	(graph selectedNode > 0)
 		ifTrue: [
-			view drawEdges: 
-			(graph addEdgeFrom: graph selectedNode to: node) asOrderedCollection.
+			"view drawEdges:" 
+			graph addEdgeFrom: graph selectedNode to: node.
+			self updateEdges.
 			graph selectedNode: 0.
 			selectedNode background: Color white.
 			]
@@ -41,6 +42,24 @@ GraphController >> addNodeAt: mousePosition [
 	blNode := (view mondrian root children last).
 	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
 	view mondrian root graph nodeAt: newNode put: blNode.
+	^blNode
+	
+]
+
+{ #category : #adding }
+GraphController >> addPlaceAt: mousePosition [
+	| blNode |
+	blNode := self addNodeAt: mousePosition.
+	view convertToPlace: blNode.
+
+]
+
+{ #category : #adding }
+GraphController >> addTransitionAt: mousePosition [
+	| blNode |
+	blNode := self addNodeAt: mousePosition.
+	view convertToTransition: blNode.
+
 ]
 
 { #category : #'model interaction' }
@@ -160,6 +179,8 @@ GraphController >> openSecondaryMenuWith: mousePosition [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Add new node' selector: #addNodeAt: argument: mousePosition.
+	menu add: 'Add new transition' selector: #addTransitionAt: argument: mousePosition.
+	menu add: 'Add new place' selector: #addPlaceAt: argument: mousePosition.
 	controllerMode == 0 ifTrue: [ menu add: 'Switch to executable FSA Model' selector: #controllerMode: argument:1.].
 	controllerMode == 1 ifTrue: [ menu add: 'Switch to Graph Editor' selector: #controllerMode: argument:0.].
 	menu popUpInWorld
@@ -194,6 +215,7 @@ GraphController >> updateEdges [
 	edges do: [ :edge | view mondrian root removeChild: edge ].
 	
 	view drawEdges: graph edges.
+	
 ]
 
 { #category : #accessing }
