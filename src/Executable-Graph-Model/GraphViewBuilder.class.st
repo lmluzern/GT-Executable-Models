@@ -21,7 +21,7 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 		border: (BlBorder paint: Color black);
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
-		addEventHandlerOn: BlMouseEvent do: [ controller updateEdges ];
+		addEventHandlerOn: BlDragEndEvent do: [ controller updateEdges ];
 		addEventHandlerOn: BlClickEvent do: [ :event |
 			event primaryButtonPressed ifTrue: [ 
 				controller controllerMode == 0
