@@ -39,8 +39,18 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 
 { #category : #'as yet unclassified' }
 GraphViewBuilder >> convertToPlace: aNode [
-	aNode
-		removeChildren.
+	| m|
+	aNode removeChildren.
+	m := OrderedCollection new.
+	m add: (BlElement new
+			border: (BlBorder paint: Color black);
+			geometry: BlCircle new;
+			size: 2@2;
+				constraintsDo: [ :c | 
+					c frame horizontal alignCenter.
+					c frame vertical alignCenter ];
+				yourself).
+	aNode addChildren: m.
 ]
 
 { #category : #'as yet unclassified' }
