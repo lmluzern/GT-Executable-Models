@@ -244,8 +244,10 @@ GraphController >> updatePlaces [
 		node := place graph model.
 		view mondrian root removeChild: place .
 		self view drawPlaces: node asOrderedCollection with: self graph tokens.
-		(view mondrian root children last) relocate: position.
+		self addNodeToMondrian: (position) + (view defaultNodeSize / 2).
 		].
+	self updateEdges.
+
 
 	
 ]
