@@ -13,6 +13,18 @@ Class {
 	#category : #'Executable-Graph-Model'
 }
 
+{ #category : #accessing }
+GraphViewBuilder >> addEventsToNode: aNode [
+	aNode
+		addEventHandlerOn: BlDragEndEvent do: [ controller updateEdges ];
+		addEventHandlerOn: BlClickEvent do: [ :event |
+			event primaryButtonPressed ifTrue: [ 
+				controller controllerMode == 0
+					ifTrue: [ controller openPrimaryMenuWith: aNode ]
+					ifFalse: [ controller onClick: aNode ]]].
+	
+]
+
 { #category : #utilities }
 GraphViewBuilder >> borderCircleWithLabel: aString [
 	| node |
@@ -21,12 +33,6 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 		border: (BlBorder paint: Color black);
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
-		addEventHandlerOn: BlDragEndEvent do: [ controller updateEdges ];
-		addEventHandlerOn: BlClickEvent do: [ :event |
-			event primaryButtonPressed ifTrue: [ 
-				controller controllerMode == 0
-					ifTrue: [ controller openPrimaryMenuWith: node ]
-					ifFalse: [ controller onClick: node ]]];
 		addChild:
 			(BlTextElement new
 				text: aString asRopedText;
@@ -34,23 +40,8 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 					c frame horizontal alignCenter.
 					c frame vertical alignCenter ];
 				yourself).
+		self addEventsToNode: node.
 		^ node.
-]
-
-{ #category : #'as yet unclassified' }
-GraphViewBuilder >> convertToPlace: aNode [
-	| m|
-	aNode removeChildren.
-	m := OrderedCollection new.
-	m add: (BlElement new
-			border: (BlBorder paint: Color black);
-			geometry: BlCircle new;
-			size: 2@2;
-				constraintsDo: [ :c | 
-					c frame horizontal alignCenter.
-					c frame vertical alignCenter ];
-				yourself).
-	aNode addChildren: m.
 ]
 
 { #category : #'as yet unclassified' }
@@ -107,6 +98,45 @@ GraphViewBuilder >> drawNodes: nodeList [
 	mondrian nodes
 	shape: [ :x | self borderCircleWithLabel: x asString ];
 	with: nodeList.
+]
+
+{ #category : #ui }
+GraphViewBuilder >> drawPlaces: nodeList [
+	| node |
+	mondrian nodes
+	shape: [ :x | 
+		node := BlElement new 
+		geometry: BlCircle new;
+		border: (BlBorder paint: Color black);
+		"background: Color paleOrange;"
+		constraintsDo: [ :c | c padding: (BlInsets all: 10)].
+		self addEventsToNode: node.
+		node];
+		with: nodeList
+		forEach: [ :each |
+			mondrian nodes 
+			shape: [ :x | BlElement new
+				border: (BlBorder paint: Color black);
+				geometry: BlCircle new;
+				size: 4@4];
+			with: (10 * each to: (10 * each + 2)).
+			mondrian layout circle radius: 10 ].
+		
+]
+
+{ #category : #ui }
+GraphViewBuilder >> drawTransitions: nodeList [
+	| node |
+	mondrian nodes
+	shape: [ :x | 
+		node := BlElement new 
+		geometry: BlRectangle new;
+		size: self defaultTransitionSize;
+		border: (BlBorder paint: Color black).
+		self addEventsToNode: node.
+		node];
+		with: nodeList.
+	
 ]
 
 { #category : #accessing }

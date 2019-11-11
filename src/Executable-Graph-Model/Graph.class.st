@@ -13,6 +13,8 @@ Class {
 	#instVars : [
 		'nodes',
 		'edges',
+		'places',
+		'transitions',
 		'currentState',
 		'selectedNode',
 		'debug'
@@ -55,6 +57,22 @@ Graph >> addNode [
 	^ newNode
 ]
 
+{ #category : #adding }
+Graph >> addPlace [
+	| newPlace |
+	newPlace := self addNode.
+	places add: newPlace.
+	^ newPlace
+]
+
+{ #category : #adding }
+Graph >> addTransition [
+	| newTransition |
+	newTransition:= self addNode.
+	transitions add: newTransition.
+	^ newTransition
+]
+
 { #category : #accessing }
 Graph >> currentState [
 	^ currentState
@@ -89,6 +107,8 @@ Graph >> deleteEdge: anEdge [
 { #category : #utilities }
 Graph >> deleteNode: aNode [
 	nodes remove: aNode.
+	(transitions includes: aNode) ifTrue: [ transitions remove: aNode ].
+	(places includes: aNode) ifTrue: [ places remove: aNode ].
 	self deleteConnectedEdgesOf: aNode.
 ]
 
@@ -114,6 +134,8 @@ Graph >> gtElement: aView [
 Graph >> initialize [
 	nodes:= OrderedCollection new.
 	edges:= OrderedCollection new.
+	places := OrderedCollection new.
+	transitions := OrderedCollection new.
 	currentState := 0.
 	selectedNode := 0.
 	debug := 0.
@@ -127,6 +149,16 @@ Graph >> nodes [
 { #category : #accessing }
 Graph >> nodes: obj [
 	nodes := obj.
+]
+
+{ #category : #accessing }
+Graph >> places [
+	^ places
+]
+
+{ #category : #accessing }
+Graph >> places: anObject [
+	places := anObject
 ]
 
 { #category : #'public interface' }
@@ -150,6 +182,16 @@ Graph >> selectedNode: anObject [
 { #category : #'public interface' }
 Graph >> successorOf: aNode [
 	^(self edges select: [ :edge | edge key = aNode ]) collect: [ :edge | edge value ]
+]
+
+{ #category : #accessing }
+Graph >> transitions [
+	^ transitions
+]
+
+{ #category : #accessing }
+Graph >> transitions: anObject [
+	transitions := anObject
 ]
 
 { #category : #'building - graph' }

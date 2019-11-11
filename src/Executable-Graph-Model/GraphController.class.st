@@ -36,29 +36,33 @@ GraphController >> addEdge: aNode [
 
 { #category : #adding }
 GraphController >> addNodeAt: mousePosition [
-	| newNode blNode |
-	newNode := self graph addNode.
-	self view drawNodes: newNode asOrderedCollection.
+	self view drawNodes: (self graph addNode) asOrderedCollection.
+	self addNodeToMondrian: mousePosition
+]
+
+{ #category : #adding }
+GraphController >> addNodeToMondrian: mousePosition [
+	| blNode |
 	blNode := (view mondrian root children last).
 	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
-	view mondrian root graph nodeAt: newNode put: blNode.
+	view mondrian root graph nodeAt: blNode graph model put: blNode.
 	^blNode
-	
+
 ]
 
 { #category : #adding }
 GraphController >> addPlaceAt: mousePosition [
-	| blNode |
-	blNode := self addNodeAt: mousePosition.
-	view convertToPlace: blNode.
+	self view drawPlaces: (self graph addPlace) asOrderedCollection.
+	self addNodeToMondrian: mousePosition
+
+
 
 ]
 
 { #category : #adding }
 GraphController >> addTransitionAt: mousePosition [
-	| blNode |
-	blNode := self addNodeAt: mousePosition.
-	view convertToTransition: blNode.
+	self view drawTransitions: (self graph addTransition) asOrderedCollection.
+	self addNodeToMondrian: mousePosition
 
 ]
 
