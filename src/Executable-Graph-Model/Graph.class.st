@@ -127,6 +127,14 @@ Graph >> edges: anObject [
 	edges := anObject
 ]
 
+{ #category : #'public interface' }
+Graph >> fireTransition: aTransition [
+	(self predecessorOf: aTransition) do: [ :place | tokens at: place put: (tokens at: place) - 1 ].
+	(self successorOf: aTransition) do: [ :place | tokens at: place put: (tokens at: place) + 1 ].
+
+
+]
+
 { #category : #ui }
 Graph >> gtElement: aView [
 	<gtView>
@@ -145,6 +153,16 @@ Graph >> initialize [
 	currentState := 0.
 	selectedNode := 0.
 	debug := 0.
+]
+
+{ #category : #'public interface' }
+Graph >> isEnabled: aTransition [
+	(transitions includes: aTransition) ifFalse: [ ^false ].
+	((self predecessorOf: aTransition) isEmpty or: (self successorOf: aTransition) isEmpty) ifTrue: [ ^false ].
+	(((self predecessorOf: aTransition) select: [ :place | (tokens at: place) <= 0 ]) isNotEmpty) ifTrue: [^false].
+	^true
+
+
 ]
 
 { #category : #accessing }

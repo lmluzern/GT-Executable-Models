@@ -65,6 +65,7 @@ GraphController >> addTokenAt: aNode [
 	node := aNode graph model.
 	graph tokens at: node put: (graph tokens at: node) + 1.
 	self updatePlaces.
+	self updateEdges.
 ]
 
 { #category : #adding }
@@ -105,6 +106,12 @@ GraphController >> deleteNode: aNode [
 	graph deleteNode: aNode graph model.
 	view mondrian root removeChild: aNode.
 	self updateEdges.
+]
+
+{ #category : #utilities }
+GraphController >> fireTransition: aTransition [
+	graph fireTransition: aTransition graph model.
+	self updatePlaces.
 ]
 
 { #category : #accessing }
@@ -179,6 +186,9 @@ GraphController >> openNodeMenuFor: aNode [
 	(graph places includes: node) ifTrue:[
 		menu add: 'Add token' selector: #addTokenAt: argument: aNode.
 		].
+	(graph isEnabled: node) ifTrue:[
+		menu add: 'Fire transition' selector: #fireTransition: argument: aNode.
+		].
 	
 	menu popUpInWorld
 	
@@ -246,9 +256,6 @@ GraphController >> updatePlaces [
 		self view drawPlaces: node asOrderedCollection with: self graph tokens.
 		self addNodeToMondrian: (position) + (view defaultNodeSize / 2).
 		].
-	self updateEdges.
-
-
 	
 ]
 
