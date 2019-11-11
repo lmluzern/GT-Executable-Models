@@ -101,13 +101,14 @@ GraphViewBuilder >> drawNodes: nodeList [
 ]
 
 { #category : #ui }
-GraphViewBuilder >> drawPlaces: nodeList [
+GraphViewBuilder >> drawPlaces: nodeList with: tokenList [
 	| node |
 	mondrian nodes
 	shape: [ :x | 
 		node := BlElement new 
 		geometry: BlCircle new;
 		border: (BlBorder paint: Color black);
+		size: self defaultNodeSize;
 		"background: Color paleOrange;"
 		constraintsDo: [ :c | c padding: (BlInsets all: 10)].
 		self addEventsToNode: node.
@@ -118,9 +119,9 @@ GraphViewBuilder >> drawPlaces: nodeList [
 			shape: [ :x | BlElement new
 				border: (BlBorder paint: Color black);
 				geometry: BlCircle new;
-				size: 4@4];
-			with: (10 * each to: (10 * each + 2)).
-			mondrian layout circle radius: 10 ].
+				size: 3@3];
+			with: (1 to: (tokenList at: each)).
+			mondrian layout circle radius: 4 ].
 		
 ]
 

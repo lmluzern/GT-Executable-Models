@@ -52,7 +52,7 @@ GraphController >> addNodeToMondrian: mousePosition [
 
 { #category : #adding }
 GraphController >> addPlaceAt: mousePosition [
-	self view drawPlaces: (self graph addPlace) asOrderedCollection.
+	self view drawPlaces: (self graph addPlace) asOrderedCollection with: self graph tokens.
 	self addNodeToMondrian: mousePosition
 
 
@@ -64,6 +64,7 @@ GraphController >> addTokenAt: aNode [
 	| node |
 	node := aNode graph model.
 	graph tokens at: node put: (graph tokens at: node) + 1.
+	self updatePlaces.
 ]
 
 { #category : #adding }
@@ -231,6 +232,21 @@ GraphController >> updateEdges [
 	edges do: [ :edge | view mondrian root removeChild: edge ].
 	
 	view drawEdges: graph edges.
+	
+]
+
+{ #category : #'as yet unclassified' }
+GraphController >> updatePlaces [
+	| places position node |
+	places := view mondrian root children select: [ :element | (element graph isNode) and: (graph places includes: element graph model) ].
+	places do: [ :place |
+		position := place measuredBounds position.
+		node := place graph model.
+		view mondrian root removeChild: place .
+		self view drawPlaces: node asOrderedCollection with: self graph tokens.
+		(view mondrian root children last) relocate: position.
+		].
+
 	
 ]
 
