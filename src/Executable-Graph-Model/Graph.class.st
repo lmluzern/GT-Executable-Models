@@ -43,9 +43,11 @@ Graph class >> egEmptyEditor [
 
 { #category : #adding }
 Graph >> addEdgeFrom: nodeA to: nodeB [
-	(edges includes: (nodeA->nodeB))
-		ifFalse: [ ^ self edges add: (nodeA->nodeB) ].
-	^ 0
+	(edges includes: (nodeA->nodeB)) ifTrue: [ ^ 0 ].
+	(((transitions includes: nodeA) and: (places includes: nodeB)) or:
+		((places includes: nodeA) and: (transitions includes: nodeB))) ifTrue: [ ^ self edges add: (nodeA->nodeB) ].
+	(((transitions includes: nodeA) or: (places includes: nodeB)) or: ((places includes: nodeA) or: (transitions includes: nodeB))) ifTrue: [ ^ 0].
+	^ self edges add: (nodeA->nodeB)
 ]
 
 { #category : #adding }
@@ -111,6 +113,7 @@ Graph >> deleteNode: aNode [
 	nodes remove: aNode.
 	(transitions includes: aNode) ifTrue: [ transitions remove: aNode ].
 	(places includes: aNode) ifTrue: [ places remove: aNode ].
+	(tokens includesKey: aNode) ifTrue: [ tokens removeKey: aNode ].
 	self deleteConnectedEdgesOf: aNode.
 ]
 
