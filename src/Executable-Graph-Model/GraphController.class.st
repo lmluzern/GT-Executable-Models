@@ -60,6 +60,13 @@ GraphController >> addPlaceAt: mousePosition [
 ]
 
 { #category : #adding }
+GraphController >> addTokenAt: aNode [
+	| node |
+	node := aNode graph model.
+	graph tokens at: node put: (graph tokens at: node) + 1.
+]
+
+{ #category : #adding }
 GraphController >> addTransitionAt: mousePosition [
 	self view drawTransitions: (self graph addTransition) asOrderedCollection.
 	self addNodeToMondrian: mousePosition
@@ -162,11 +169,16 @@ GraphController >> openEdgeMenuFor: anEdge [
 
 { #category : #'as yet unclassified' }
 GraphController >> openNodeMenuFor: aNode [
-	| menu |
+	| menu node |
+	node := aNode graph model.
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Add edge from current selected node' selector: #addEdge: argument: aNode.
 	menu add: 'Set as initial state' selector: #setInitialState: argument: aNode.
 	menu add: 'Delete node' selector: #deleteNode: argument: aNode.
+	(graph places includes: node) ifTrue:[
+		menu add: 'Add token' selector: #addTokenAt: argument: aNode.
+		].
+	
 	menu popUpInWorld
 	
 ]

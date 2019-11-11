@@ -15,6 +15,7 @@ Class {
 		'edges',
 		'places',
 		'transitions',
+		'tokens',
 		'currentState',
 		'selectedNode',
 		'debug'
@@ -62,6 +63,7 @@ Graph >> addPlace [
 	| newPlace |
 	newPlace := self addNode.
 	places add: newPlace.
+	tokens at: newPlace put: 0.
 	^ newPlace
 ]
 
@@ -136,6 +138,7 @@ Graph >> initialize [
 	edges:= OrderedCollection new.
 	places := OrderedCollection new.
 	transitions := OrderedCollection new.
+	tokens := OrderedDictionary new.
 	currentState := 0.
 	selectedNode := 0.
 	debug := 0.
@@ -182,6 +185,16 @@ Graph >> selectedNode: anObject [
 { #category : #'public interface' }
 Graph >> successorOf: aNode [
 	^(self edges select: [ :edge | edge key = aNode ]) collect: [ :edge | edge value ]
+]
+
+{ #category : #accessing }
+Graph >> tokens [
+	^ tokens
+]
+
+{ #category : #accessing }
+Graph >> tokens: anObject [
+	tokens := anObject
 ]
 
 { #category : #accessing }
