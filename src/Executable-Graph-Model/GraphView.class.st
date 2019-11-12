@@ -182,13 +182,15 @@ GraphView >> findNodeElementFor: aNode [
 { #category : #ui }
 GraphView >> updateTokens: numberOfTokens at: aNodeElement [
 	aNodeElement removeChildren.
+	aNodeElement layout: GtGraphCirclePackLayout new.
 	numberOfTokens timesRepeat: [
 		| token |
 		token := BlElement new.
 		token border: (BlBorder paint: Color black width: 1).
 		token geometry: BlCircle new.
 		token margin: (BlInsets all: 3).
-		token size: 10@10.
+		token background: Color black.
+		token size: 7@7.
 		aNodeElement addChild: token ].
 ]
 
