@@ -34,6 +34,7 @@ GraphView >> borderCircle [
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
 		layout: GtGraphCirclePackLayout new.
+		"layout: BlFrameLayout new."
 		self addEventsToNode: node.
 		^ node.
 ]
@@ -68,22 +69,14 @@ GraphView >> borderRectangle [
 		^ node.
 ]
 
-{ #category : #'as yet unclassified' }
-GraphView >> convertToTransition: aNode [
-	aNode
-		geometry: BlRectangle new;
-		size: self defaultTransitionSize;
-		removeChildren.
-]
-
 { #category : #ui }
 GraphView >> defaultNodeSize [
-	^ 20@20
+	^ 50@50
 ]
 
 { #category : #'as yet unclassified' }
 GraphView >> defaultTransitionSize [
-	^ 20@30
+	^ 35@50
 ]
 
 { #category : #ui }
@@ -154,17 +147,6 @@ GraphView >> drawNodes: nodeList [
 ]
 
 { #category : #ui }
-GraphView >> drawPlaces: nodeList [
-	
-	self addChildren: (nodeList collect: [ :eachNode |
-		| aNodeElement |
-		aNodeElement := self borderCircle.
-		aNodeElement graph beNode; model: eachNode.
-		aNodeElement addEventHandler: BlPullHandler new.
-		aNodeElement ])
-]
-
-{ #category : #ui }
 GraphView >> drawPlaces: nodeList with: tokenList [
 	
 	self addChildren: (nodeList collect: [ :eachNode |
@@ -172,28 +154,8 @@ GraphView >> drawPlaces: nodeList with: tokenList [
 		aNodeElement := self borderCircle.
 		aNodeElement graph beNode; model: eachNode.
 		aNodeElement addEventHandler: BlPullHandler new.
+		self updateTokens: (tokenList at: eachNode)  at: aNodeElement.
 		aNodeElement ])
-	
-	"mondrian nodes
-	shape: [ :x | 
-		node := BlElement new 
-		geometry: BlCircle new;
-		border: (BlBorder paint: Color black);
-		size: self defaultNodeSize;"
-		"background: Color paleOrange;"
-		"constraintsDo: [ :c | c padding: (BlInsets all: 10)].
-		self addEventsToNode: node.
-		node];
-		with: nodeList
-		forEach: [ :each |
-			mondrian nodes 
-			shape: [ :x | BlElement new
-				border: (BlBorder paint: Color black);
-				geometry: BlCircle new;
-				size: 3@3];
-			with: (1 to: (tokenList at: each)).
-			mondrian layout circle radius: 4 ]."
-		
 ]
 
 { #category : #ui }
@@ -215,6 +177,19 @@ GraphView >> findEdgeElementFor: aGtGraphEdge [
 { #category : #'as yet unclassified' }
 GraphView >> findNodeElementFor: aNode [
 	^ self children detect: [ :eachElement | eachElement graph model = aNode ]
+]
+
+{ #category : #ui }
+GraphView >> updateTokens: numberOfTokens at: aNodeElement [
+	aNodeElement removeChildren.
+	numberOfTokens timesRepeat: [
+		| token |
+		token := BlElement new.
+		token border: (BlBorder paint: Color black width: 1).
+		token geometry: BlCircle new.
+		token margin: (BlInsets all: 3).
+		token size: 10@10.
+		aNodeElement addChild: token ].
 ]
 
 { #category : #ui }

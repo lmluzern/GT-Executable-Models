@@ -43,17 +43,6 @@ GraphController >> addNodeAt: mousePosition [
 ]
 
 { #category : #'api - adding' }
-GraphController >> addNodeToMondrian: mousePosition [
-	"| blNode |
-
-	blNode := (view children last).
-	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
-
-	^ blNode"
-
-]
-
-{ #category : #'api - adding' }
 GraphController >> addPlaceAt: mousePosition [
 	self view drawPlaces: (self graph addPlace) asOrderedCollection with: self graph tokens.
 	self relocateLastNode: mousePosition
@@ -66,16 +55,8 @@ GraphController >> addPlaceAt: mousePosition [
 GraphController >> addTokenAt: aNode [
 	| node |
 	node := aNode graph model.
-	graph tokens at: node put: (graph tokens at: node) + 1.
-	self updatePlaces
-]
+	self view updateTokens: (graph tokens at: node put: (graph tokens at: node) + 1) at: aNode
 
-{ #category : #'api - adding' }
-GraphController >> addTokens: tokens to: aNodeElement [
-	| node |
-	node := aNodeElement graph model.
-	graph tokens at: node put: (graph tokens at: node) + 1.
-	self updatePlaces
 ]
 
 { #category : #'api - adding' }
@@ -132,8 +113,18 @@ GraphController >> deleteNode: aNodeElement [
 
 { #category : #utilities }
 GraphController >> fireTransition: aTransition [
-	graph fireTransition: aTransition graph model.
-	self updatePlaces.
+	| node |
+	node := aTransition graph model.
+	
+	graph fireTransition: node.
+	
+	(graph predecessorOf: node) do:
+		[ :eachPredecessor |
+		self view updateTokens: (graph tokens at: eachPredecessor) at: (self view findNodeElementFor: eachPredecessor) ].
+	
+	(graph successorOf: node) do:
+		[ :eachSuccessor |
+		self view updateTokens: (graph tokens at: eachSuccessor) at: (self view findNodeElementFor: eachSuccessor) ]
 ]
 
 { #category : #accessing }
@@ -274,20 +265,6 @@ GraphController >> updateEdges [
 	edges do: [ :edge | view mondrian root removeChild: edge ].
 	
 	view drawEdges: graph edges.
-	
-]
-
-{ #category : #'as yet unclassified' }
-GraphController >> updatePlaces [
-	| places position node |
-	places := view mondrian root children select: [ :element | (element graph isNode) and: (graph places includes: element graph model) ].
-	places do: [ :place |
-		position := place measuredBounds position.
-		node := place graph model.
-		view mondrian root removeChild: place .
-		self view drawPlaces: node asOrderedCollection with: self graph tokens.
-		self addNodeToMondrian: (position) + (view defaultNodeSize / 2).
-		].
 	
 ]
 
