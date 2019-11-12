@@ -105,7 +105,7 @@ Graph >> deleteConnectedEdgesOf: aNode [
 
 { #category : #'as yet unclassified' }
 Graph >> deleteEdge: anEdge [
-	edges remove: anEdge.
+	edges remove: anEdge ifAbsent: [ ]
 ]
 
 { #category : #utilities }

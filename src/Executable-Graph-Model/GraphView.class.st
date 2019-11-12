@@ -171,6 +171,11 @@ GraphView >> drawTransitions: nodeList [
 ]
 
 { #category : #'as yet unclassified' }
+GraphView >> findEdgeElementFor: aGtGraphEdge [
+	^ self children detect: [ :eachElement | eachElement graph model = aGtGraphEdge ]
+]
+
+{ #category : #'as yet unclassified' }
 GraphView >> findNodeElementFor: aNode [
 	^ self children detect: [ :eachElement | eachElement graph model = aNode ]
 ]

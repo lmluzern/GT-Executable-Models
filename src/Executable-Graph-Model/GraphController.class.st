@@ -38,13 +38,13 @@ GraphController >> addEdge: aNodeElement [
 			].
 ]
 
-{ #category : #adding }
+{ #category : #'api - adding' }
 GraphController >> addNodeAt: mousePosition [
 	self view drawNodes: (self graph addNode) asOrderedCollection.
 	self addNodeToMondrian: mousePosition
 ]
 
-{ #category : #adding }
+{ #category : #'api - adding' }
 GraphController >> addNodeToMondrian: mousePosition [
 	| blNode |
 
@@ -55,7 +55,7 @@ GraphController >> addNodeToMondrian: mousePosition [
 
 ]
 
-{ #category : #adding }
+{ #category : #'api - adding' }
 GraphController >> addPlaceAt: mousePosition [
 	self view drawPlaces: (self graph addPlace) asOrderedCollection with: self graph tokens.
 	self addNodeToMondrian: mousePosition
@@ -64,7 +64,7 @@ GraphController >> addPlaceAt: mousePosition [
 
 ]
 
-{ #category : #adding }
+{ #category : #'api - adding' }
 GraphController >> addTokenAt: aNode [
 	| node |
 	node := aNode graph model.
@@ -72,7 +72,7 @@ GraphController >> addTokenAt: aNode [
 	self updatePlaces
 ]
 
-{ #category : #adding }
+{ #category : #'api - adding' }
 GraphController >> addTransitionAt: mousePosition [
 	self view drawTransitions: (self graph addTransition) asOrderedCollection.
 	self addNodeToMondrian: mousePosition
@@ -99,7 +99,7 @@ GraphController >> deadColor [
 	^ Color red
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - deleting' }
 GraphController >> deleteEdge: anEdgeElement [
 	| aGtGraphEdge |
 	
@@ -110,14 +110,18 @@ GraphController >> deleteEdge: anEdgeElement [
 	aGtGraphEdge fromElement constraints graph removeConnectedEdge: aGtGraphEdge.
 	aGtGraphEdge toElement constraints graph removeConnectedEdge: aGtGraphEdge.
 	
-	anEdgeElement removeFromParent.
+	anEdgeElement removeFromParent
 ]
 
-{ #category : #utilities }
-GraphController >> deleteNode: aNode [
-	graph deleteNode: aNode graph model.
-	view mondrian root removeChild: aNode.
-	self updateEdges.
+{ #category : #'api - deleting' }
+GraphController >> deleteNode: aNodeElement [
+	"I also delete all connected edges of the given node element"
+	graph deleteNode: aNodeElement graph model.
+	
+	aNodeElement graph connectedEdges
+		do: [ :eachGtGraphEdge | self deleteEdge: (view findEdgeElementFor: eachGtGraphEdge) ].
+	
+	aNodeElement removeFromParent
 ]
 
 { #category : #utilities }
