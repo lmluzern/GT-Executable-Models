@@ -138,9 +138,10 @@ Graph >> fireTransition: aTransition [
 { #category : #ui }
 Graph >> gtElement: aView [
 	<gtView>
-	^ aView mondrian
+
+	^ aView explicit
 		title: 'View';
-		painting: [ :aMondrian | GraphViewBuilder new viewFor: self with: aMondrian ]
+		stencil: [ GraphView new viewFor: self ]
 ]
 
 { #category : #initialization }
@@ -230,5 +231,5 @@ Graph >> transitions: anObject [
 
 { #category : #'building - graph' }
 Graph >> view [
-	^ GraphViewBuilder new viewFor: self.
+	^ GraphView new viewFor: self.
 ]

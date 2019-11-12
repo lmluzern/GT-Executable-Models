@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'graph',
 		'view',
-		'viewNodes',
 		'selectedNode',
 		'controllerMode'
 	],
@@ -15,22 +14,27 @@ Class {
 }
 
 { #category : #'model interaction' }
-GraphController >> addEdge: aNode [
+GraphController >> addEdge: aNodeElement [
 	| node |
-	node := aNode graph model.
-	graph debug: view mondrian.
+
+	node := aNodeElement graph model.
+
+	graph debug: view.
+
 	(graph selectedNode > 0)
 		ifTrue: [
-			"view drawEdges:" 
-			graph addEdgeFrom: graph selectedNode to: node.
-			self updateEdges.
+			| anEdge |
+			anEdge := graph addEdgeFrom: graph selectedNode to: node.
+			
+			view drawEdge: anEdge.
+			
 			graph selectedNode: 0.
 			selectedNode background: Color white.
 			]
 		ifFalse: [
 			graph selectedNode: node.
-			aNode background: Color blue.
-			selectedNode := aNode.
+			aNodeElement background: Color blue.
+			selectedNode := aNodeElement.
 			].
 ]
 
@@ -43,10 +47,11 @@ GraphController >> addNodeAt: mousePosition [
 { #category : #adding }
 GraphController >> addNodeToMondrian: mousePosition [
 	| blNode |
-	blNode := (view mondrian root children last).
+
+	blNode := (view children last).
 	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
-	view mondrian root graph nodeAt: blNode graph model put: blNode.
-	^blNode
+
+	^ blNode
 
 ]
 
@@ -64,8 +69,7 @@ GraphController >> addTokenAt: aNode [
 	| node |
 	node := aNode graph model.
 	graph tokens at: node put: (graph tokens at: node) + 1.
-	self updatePlaces.
-	self updateEdges.
+	self updatePlaces
 ]
 
 { #category : #adding }
@@ -77,7 +81,7 @@ GraphController >> addTransitionAt: mousePosition [
 
 { #category : #'model interaction' }
 GraphController >> clearAllStates [
-	viewNodes do: [ :node | node background: Color white ]
+	view allNodeElements do: [ :eachNodeElement | eachNodeElement background: Color white ]
 ]
 
 { #category : #accessing }
@@ -96,9 +100,17 @@ GraphController >> deadColor [
 ]
 
 { #category : #'as yet unclassified' }
-GraphController >> deleteEdge: anEdge [
-	graph deleteEdge: (anEdge fromAnchor referenceElement graph model -> anEdge toAnchor referenceElement graph model).
-	self updateEdges.
+GraphController >> deleteEdge: anEdgeElement [
+	| aGtGraphEdge |
+	
+	aGtGraphEdge := anEdgeElement graph model.
+	
+	graph deleteEdge: (aGtGraphEdge fromElement graph model -> aGtGraphEdge toElement graph model).
+	
+	aGtGraphEdge fromElement constraints graph removeConnectedEdge: aGtGraphEdge.
+	aGtGraphEdge toElement constraints graph removeConnectedEdge: aGtGraphEdge.
+	
+	anEdgeElement removeFromParent.
 ]
 
 { #category : #utilities }
@@ -129,12 +141,8 @@ GraphController >> initializeModel: aGraph andView: aView [
 	graph := aGraph.
 	view := aView.
 	controllerMode := 0.
-	viewNodes := view mondrian root children select: [ :each | each graph isNode ].
-	
-	"viewNodes
-		do: [ :aNode | aNode when: BlClickEvent do: [ self onClick: aNode ] ]."
 		
-	view mondrian root when: BlMouseDownEvent do: [ :event |
+	view when: BlMouseDownEvent do: [ :event |
 		event secondaryButtonPressed ifTrue: [ self openSecondaryMenuWith: event localPosition ].].
 ]
 
@@ -147,8 +155,9 @@ GraphController >> liveColor [
 GraphController >> markSuccessorStates [
 	| successors |
 	successors := self graph successorOf: self graph currentState.
-	(viewNodes select: [ :node | successors includes: node graph model ])  do:
-		[ :node | node background: Color blue ]
+	view allNodeElements
+		select: [ :node | successors includes: node graph model ]
+		thenDo: [ :node | node background: Color blue ]
 ]
 
 { #category : #'model interaction' }
@@ -160,9 +169,9 @@ GraphController >> nodeColor [
 ]
 
 { #category : #initialization }
-GraphController >> onClick: aNode [
+GraphController >> onClick: aNodeElement [
 	| node |
-	node := aNode graph model.
+	node := aNodeElement graph model.
 	((graph successorOf: graph currentState) includes: node)
 		ifTrue: [ graph currentState: node.].
 ]
@@ -215,11 +224,13 @@ GraphController >> openSecondaryMenuWith: mousePosition [
 
 { #category : #initialization }
 GraphController >> setCurrentStateColor [
-	viewNodes := view mondrian root children select: [ :each | each graph isNode ].
+	| aCurrentStateNodeElement |
+
+	aCurrentStateNodeElement := view findNodeElementFor: graph currentState.
 	self clearAllStates.
 	graph selectedNode: 0.
-	(viewNodes detect:
-		[ :node | node graph model = graph currentState ]) background: self nodeColor.
+
+	aCurrentStateNodeElement background: self nodeColor
 ]
 
 { #category : #initialization }
@@ -267,14 +278,4 @@ GraphController >> view [
 { #category : #accessing }
 GraphController >> view: anObject [
 	view := anObject
-]
-
-{ #category : #accessing }
-GraphController >> viewNodes [
-	^ viewNodes
-]
-
-{ #category : #accessing }
-GraphController >> viewNodes: anObject [
-	viewNodes := anObject
 ]

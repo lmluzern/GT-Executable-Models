@@ -2,21 +2,17 @@
 This class visualizes graphs.
 "
 Class {
-	#name : #GraphViewBuilder,
-	#superclass : #Object,
+	#name : #GraphView,
+	#superclass : #BlElement,
 	#instVars : [
-		'mondrian'
-	],
-	#classVars : [
 		'controller'
 	],
 	#category : #'Executable-Graph-Model'
 }
 
 { #category : #accessing }
-GraphViewBuilder >> addEventsToNode: aNode [
+GraphView >> addEventsToNode: aNode [
 	aNode
-		addEventHandlerOn: BlDragEndEvent do: [ controller updateEdges ];
 		addEventHandlerOn: BlClickEvent do: [ :event |
 			event primaryButtonPressed ifTrue: [ 
 				controller controllerMode == 0
@@ -25,8 +21,13 @@ GraphViewBuilder >> addEventsToNode: aNode [
 	
 ]
 
+{ #category : #accessing }
+GraphView >> allNodeElements [
+	^ self children select: [ :eachElement | eachElement graph isNode ]
+]
+
 { #category : #utilities }
-GraphViewBuilder >> borderCircleWithLabel: aString [
+GraphView >> borderCircleWithLabel: aString [
 	| node |
 	node := BlElement new
 		layout: BlFrameLayout new;
@@ -45,7 +46,7 @@ GraphViewBuilder >> borderCircleWithLabel: aString [
 ]
 
 { #category : #'as yet unclassified' }
-GraphViewBuilder >> convertToTransition: aNode [
+GraphView >> convertToTransition: aNode [
 	aNode
 		geometry: BlRectangle new;
 		size: self defaultTransitionSize;
@@ -53,21 +54,20 @@ GraphViewBuilder >> convertToTransition: aNode [
 ]
 
 { #category : #ui }
-GraphViewBuilder >> defaultNodeSize [
+GraphView >> defaultNodeSize [
 	^ 20@20
 ]
 
 { #category : #'as yet unclassified' }
-GraphViewBuilder >> defaultTransitionSize [
+GraphView >> defaultTransitionSize [
 	^ 15@20
 ]
 
 { #category : #ui }
-GraphViewBuilder >> directedCurvedEdge [
+GraphView >> directedCurvedEdge [
 	| edge |
-	edge := BlParabollaArcElement new
+	edge := BlLineElement new
 		zIndex: 1;
-		curvatureFraction: 0.0;
 		addEventHandlerOn: BlClickEvent do: [ :event |
 			event primaryButtonPressed ifTrue: [ 
 				controller controllerMode == 0
@@ -84,24 +84,54 @@ GraphViewBuilder >> directedCurvedEdge [
 ]
 
 { #category : #ui }
-GraphViewBuilder >> drawEdges: edgeList [
-	mondrian edges
-	shape: [ :edge | self directedCurvedEdge ];
-	fromNearestTightCircle;
-	toNearestTightCircle;
-	connectToAll: [:x | (edgeList select: [ :each | each key = x ]) collect:
-			[ :each | each value] ].
+GraphView >> drawEdge: anEdge [
+	| aFromNodeElement aToNodeElement |
+	
+	aFromNodeElement := self findNodeElementFor: anEdge key.
+	aToNodeElement := self findNodeElementFor: anEdge value.
+
+	self drawEdge: anEdge from: aFromNodeElement to: aToNodeElement
 ]
 
 { #category : #ui }
-GraphViewBuilder >> drawNodes: nodeList [
-	mondrian nodes
-	shape: [ :x | self borderCircleWithLabel: x asString ];
-	with: nodeList.
+GraphView >> drawEdge: anEdge from: aFromNodeElement to: aToNodeElement [
+	| anEdgeElement aGtGraphEdge |
+
+	"GraphEdge know two node elements that it connects"
+	aGtGraphEdge := aFromNodeElement graph connectTo: aToNodeElement.
+
+	anEdgeElement := self directedCurvedEdge.
+	anEdgeElement graph beEdge.
+	anEdgeElement graph model: aGtGraphEdge.
+
+	anEdgeElement fromAnchor: (BlNearestPositionEllipseAnchor
+		referenceElement: aFromNodeElement
+		relatedTo: aToNodeElement).
+	anEdgeElement toAnchor: (BlNearestPositionEllipseAnchor
+		referenceElement: aToNodeElement
+		relatedTo: aFromNodeElement).
+
+	self addChild: anEdgeElement
 ]
 
 { #category : #ui }
-GraphViewBuilder >> drawPlaces: nodeList with: tokenList [
+GraphView >> drawEdges: edgeList [
+	edgeList do: [ :eachEdge | self drawEdge: eachEdge ]
+]
+
+{ #category : #ui }
+GraphView >> drawNodes: nodeList [
+
+	self addChildren: (nodeList collect: [ :eachNode |
+		| aNodeElement |
+		aNodeElement := self borderCircleWithLabel: eachNode asString.
+		aNodeElement graph beNode; model: eachNode.
+		aNodeElement addEventHandler: BlPullHandler new.
+		aNodeElement ])
+]
+
+{ #category : #ui }
+GraphView >> drawPlaces: nodeList with: tokenList [
 	| node |
 	mondrian nodes
 	shape: [ :x | 
@@ -126,8 +156,8 @@ GraphViewBuilder >> drawPlaces: nodeList with: tokenList [
 ]
 
 { #category : #ui }
-GraphViewBuilder >> drawTransitions: nodeList [
-	| node |
+GraphView >> drawTransitions: nodeList [
+	"| node |
 	mondrian nodes
 	shape: [ :x | 
 		node := BlElement new 
@@ -137,47 +167,25 @@ GraphViewBuilder >> drawTransitions: nodeList [
 		self addEventsToNode: node.
 		node];
 		with: nodeList.
-	
+	"
 ]
 
-{ #category : #accessing }
-GraphViewBuilder >> mondrian [
-	^ mondrian
-]
-
-{ #category : #accessing }
-GraphViewBuilder >> mondrian: anObject [
-	mondrian := anObject
+{ #category : #'as yet unclassified' }
+GraphView >> findNodeElementFor: aNode [
+	^ self children detect: [ :eachElement | eachElement graph model = aNode ]
 ]
 
 { #category : #ui }
-GraphViewBuilder >> viewFor: aGraph [
+GraphView >> viewFor: aGraph [
+	self constraintsDo: [ :c |
+		c horizontal matchParent.
+		c vertical matchParent ].
 
-	"| mondrian controller |
-	mondrian := GtMondrian new.
-	mondrian nodes
-		shape: [ :x | self borderCircleWithLabel: x asString ];
-		with: aGraph nodes.
-	mondrian edges
-		shape: [ :edge | self directedCurvedEdge ];
-		fromNearestTightCircle;
-		toNearestTightCircle;
-		connectToAll: [:x | (aGraph edges select: [ :each | each key = x ]) collect:
-			[ :each | each value] ].
-	mondrian layout circle.
-	controller := FSAgraphController new initializeModel: aGraph andView: mondrian root.
-	aGraph addDependent: controller.
-	^ mondrian"
-]
-
-{ #category : #ui }
-GraphViewBuilder >> viewFor: aGraph with: aMondrian [
-	mondrian := aMondrian.
 	self drawNodes: aGraph nodes.
+	
+	"TODO"
 	controller := GraphController new initializeModel: aGraph andView: self.
+	
 	aGraph addDependent: controller.
 	self drawEdges: aGraph edges.
-	aMondrian layout circle.
-
-	^ aMondrian
 ]
