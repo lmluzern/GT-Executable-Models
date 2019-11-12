@@ -18,15 +18,13 @@ GraphController >> addEdge: aNodeElement [
 	| node |
 
 	node := aNodeElement graph model.
-
-	graph debug: view.
-
+	
 	(graph selectedNode > 0)
 		ifTrue: [
 			| anEdge |
 			anEdge := graph addEdgeFrom: graph selectedNode to: node.
 			
-			view drawEdge: anEdge.
+			anEdge ~= 0 ifTrue: [ view drawEdge: anEdge ].
 			
 			graph selectedNode: 0.
 			selectedNode background: Color white.
@@ -41,24 +39,24 @@ GraphController >> addEdge: aNodeElement [
 { #category : #'api - adding' }
 GraphController >> addNodeAt: mousePosition [
 	self view drawNodes: (self graph addNode) asOrderedCollection.
-	self addNodeToMondrian: mousePosition
+	self relocateLastNode: mousePosition
 ]
 
 { #category : #'api - adding' }
 GraphController >> addNodeToMondrian: mousePosition [
-	| blNode |
+	"| blNode |
 
 	blNode := (view children last).
 	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
 
-	^ blNode
+	^ blNode"
 
 ]
 
 { #category : #'api - adding' }
 GraphController >> addPlaceAt: mousePosition [
 	self view drawPlaces: (self graph addPlace) asOrderedCollection with: self graph tokens.
-	self addNodeToMondrian: mousePosition
+	self relocateLastNode: mousePosition
 
 
 
@@ -73,9 +71,17 @@ GraphController >> addTokenAt: aNode [
 ]
 
 { #category : #'api - adding' }
+GraphController >> addTokens: tokens to: aNodeElement [
+	| node |
+	node := aNodeElement graph model.
+	graph tokens at: node put: (graph tokens at: node) + 1.
+	self updatePlaces
+]
+
+{ #category : #'api - adding' }
 GraphController >> addTransitionAt: mousePosition [
 	self view drawTransitions: (self graph addTransition) asOrderedCollection.
-	self addNodeToMondrian: mousePosition
+	self relocateLastNode: mousePosition
 
 ]
 
@@ -224,6 +230,17 @@ GraphController >> openSecondaryMenuWith: mousePosition [
 	controllerMode == 0 ifTrue: [ menu add: 'Switch to executable FSA Model' selector: #controllerMode: argument:1.].
 	controllerMode == 1 ifTrue: [ menu add: 'Switch to Graph Editor' selector: #controllerMode: argument:0.].
 	menu popUpInWorld
+]
+
+{ #category : #'api - adding' }
+GraphController >> relocateLastNode: mousePosition [
+	| blNode |
+
+	blNode := (view children last).
+	blNode relocate: (mousePosition) - (view defaultNodeSize / 2).
+
+	^ blNode
+
 ]
 
 { #category : #initialization }

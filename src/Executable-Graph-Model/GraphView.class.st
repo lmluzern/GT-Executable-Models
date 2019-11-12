@@ -27,6 +27,18 @@ GraphView >> allNodeElements [
 ]
 
 { #category : #utilities }
+GraphView >> borderCircle [
+	| node |
+	node := BlElement new
+		border: (BlBorder paint: Color black width: 1);
+		geometry: BlCircle new;
+		size: self defaultNodeSize;
+		layout: GtGraphCirclePackLayout new.
+		self addEventsToNode: node.
+		^ node.
+]
+
+{ #category : #utilities }
 GraphView >> borderCircleWithLabel: aString [
 	| node |
 	node := BlElement new
@@ -41,6 +53,17 @@ GraphView >> borderCircleWithLabel: aString [
 					c frame horizontal alignCenter.
 					c frame vertical alignCenter ];
 				yourself).
+		self addEventsToNode: node.
+		^ node.
+]
+
+{ #category : #utilities }
+GraphView >> borderRectangle [
+	| node |
+	node := BlElement new
+		geometry: BlRectangle new;
+		size: self defaultTransitionSize;
+		border: (BlBorder paint: Color black).
 		self addEventsToNode: node.
 		^ node.
 ]
@@ -60,7 +83,7 @@ GraphView >> defaultNodeSize [
 
 { #category : #'as yet unclassified' }
 GraphView >> defaultTransitionSize [
-	^ 15@20
+	^ 20@30
 ]
 
 { #category : #ui }
@@ -131,16 +154,34 @@ GraphView >> drawNodes: nodeList [
 ]
 
 { #category : #ui }
+GraphView >> drawPlaces: nodeList [
+	
+	self addChildren: (nodeList collect: [ :eachNode |
+		| aNodeElement |
+		aNodeElement := self borderCircle.
+		aNodeElement graph beNode; model: eachNode.
+		aNodeElement addEventHandler: BlPullHandler new.
+		aNodeElement ])
+]
+
+{ #category : #ui }
 GraphView >> drawPlaces: nodeList with: tokenList [
-	| node |
-	mondrian nodes
+	
+	self addChildren: (nodeList collect: [ :eachNode |
+		| aNodeElement |
+		aNodeElement := self borderCircle.
+		aNodeElement graph beNode; model: eachNode.
+		aNodeElement addEventHandler: BlPullHandler new.
+		aNodeElement ])
+	
+	"mondrian nodes
 	shape: [ :x | 
 		node := BlElement new 
 		geometry: BlCircle new;
 		border: (BlBorder paint: Color black);
-		size: self defaultNodeSize;
+		size: self defaultNodeSize;"
 		"background: Color paleOrange;"
-		constraintsDo: [ :c | c padding: (BlInsets all: 10)].
+		"constraintsDo: [ :c | c padding: (BlInsets all: 10)].
 		self addEventsToNode: node.
 		node];
 		with: nodeList
@@ -151,23 +192,19 @@ GraphView >> drawPlaces: nodeList with: tokenList [
 				geometry: BlCircle new;
 				size: 3@3];
 			with: (1 to: (tokenList at: each)).
-			mondrian layout circle radius: 4 ].
+			mondrian layout circle radius: 4 ]."
 		
 ]
 
 { #category : #ui }
 GraphView >> drawTransitions: nodeList [
-	"| node |
-	mondrian nodes
-	shape: [ :x | 
-		node := BlElement new 
-		geometry: BlRectangle new;
-		size: self defaultTransitionSize;
-		border: (BlBorder paint: Color black).
-		self addEventsToNode: node.
-		node];
-		with: nodeList.
-	"
+
+	self addChildren: (nodeList collect: [ :eachNode |
+		| aNodeElement |
+		aNodeElement := self borderRectangle.
+		aNodeElement graph beNode; model: eachNode.
+		aNodeElement addEventHandler: BlPullHandler new.
+		aNodeElement ])
 ]
 
 { #category : #'as yet unclassified' }
