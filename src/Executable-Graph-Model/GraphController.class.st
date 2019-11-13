@@ -19,12 +19,19 @@ GraphController >> addEdge: aNodeElement [
 
 	node := aNodeElement graph model.
 	
+	graph debug: aNodeElement graph.
+	
 	(graph selectedNode > 0)
 		ifTrue: [
 			| anEdge |
 			anEdge := graph addEdgeFrom: graph selectedNode to: node.
 			
-			anEdge ~= 0 ifTrue: [ view drawEdge: anEdge ].
+			anEdge ~= 0 ifTrue: [
+				| anEdgeElement |
+				anEdgeElement := view drawEdge: anEdge.
+				((graph places includes: node) or: (graph transitions includes: node)) ifTrue: [
+					view addWeightTo: anEdgeElement with: (graph weights at: anEdge) ]
+				 ].
 			
 			graph selectedNode: 0.
 			selectedNode background: Color white.
@@ -137,6 +144,21 @@ GraphController >> graph: anObject [
 	graph := anObject
 ]
 
+{ #category : #'api - deleting' }
+GraphController >> increaseWeightOf: anEdgeElement [
+	| fromNode toNode |
+	fromNode := (anEdgeElement graph model fromElement) graph model.
+	toNode := (anEdgeElement graph model toElement) graph model.
+	
+	graph weights at: (fromNode->toNode) ifPresent: [
+		graph weights at: (fromNode->toNode) put: (graph weights at: (fromNode->toNode)) + 1.
+		view updateWeightOf: anEdgeElement with: (graph weights at: (fromNode->toNode))
+		].
+
+	self graph debug: anEdgeElement.
+
+]
+
 { #category : #initialization }
 GraphController >> initializeModel: aGraph andView: aView [
 	graph := aGraph.
@@ -182,6 +204,7 @@ GraphController >> openEdgeMenuFor: anEdge [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Delete edge' selector: #deleteEdge: argument: anEdge.
+	menu add: 'Increase weight' selector: #increaseWeightOf: argument: anEdge.
 	menu popUpInWorld
 ]
 

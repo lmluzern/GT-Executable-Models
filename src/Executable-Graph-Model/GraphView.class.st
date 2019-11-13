@@ -21,6 +21,17 @@ GraphView >> addEventsToNode: aNode [
 	
 ]
 
+{ #category : #ui }
+GraphView >> addWeightTo: anEdgeElement with: weight [
+	
+	anEdgeElement addChild:
+		(BlTextElement new
+			text: weight asRopedText;
+			constraintsDo: [ :c | 
+				c frame horizontal alignCenter.
+				c frame vertical alignCenter]).
+]
+
 { #category : #accessing }
 GraphView >> allNodeElements [
 	^ self children select: [ :eachElement | eachElement graph isNode ]
@@ -30,7 +41,7 @@ GraphView >> allNodeElements [
 GraphView >> borderCircle [
 	| node |
 	node := BlElement new
-		border: (BlBorder paint: Color black width: 1);
+		border: (BlBorder paint: Color black width: self defaultWidth);
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
 		layout: GtGraphCirclePackLayout new.
@@ -44,7 +55,7 @@ GraphView >> borderCircleWithLabel: aString [
 	| node |
 	node := BlElement new
 		layout: BlFrameLayout new;
-		border: (BlBorder paint: Color black);
+		border: (BlBorder paint: Color black width: self defaultWidth);
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
 		addChild:
@@ -64,7 +75,7 @@ GraphView >> borderRectangle [
 	node := BlElement new
 		geometry: BlRectangle new;
 		size: self defaultTransitionSize;
-		border: (BlBorder paint: Color black).
+		border: (BlBorder paint: Color black width: self defaultWidth).
 		self addEventsToNode: node.
 		^ node.
 ]
@@ -80,6 +91,11 @@ GraphView >> defaultTransitionSize [
 ]
 
 { #category : #ui }
+GraphView >> defaultWidth [
+	^ 2
+]
+
+{ #category : #ui }
 GraphView >> directedCurvedEdge [
 	| edge |
 	edge := BlLineElement new
@@ -88,14 +104,15 @@ GraphView >> directedCurvedEdge [
 			event primaryButtonPressed ifTrue: [ 
 				controller controllerMode == 0
 					ifTrue: [ controller openPrimaryMenuWith: edge ]]];
-		border: (BlBorder paint: Color black width: 1);
+		border: (BlBorder paint: Color black width: self defaultWidth);
 		toHead:
 			(BlArrowheadSimpleArrow new
 				border:
 					(BlBorder builder
 						paint: Color black;
-						width: 1;
+						width: self defaultWidth;
 						build)).
+		
 		^edge
 ]
 
@@ -106,7 +123,7 @@ GraphView >> drawEdge: anEdge [
 	aFromNodeElement := self findNodeElementFor: anEdge key.
 	aToNodeElement := self findNodeElementFor: anEdge value.
 
-	self drawEdge: anEdge from: aFromNodeElement to: aToNodeElement
+	^ self drawEdge: anEdge from: aFromNodeElement to: aToNodeElement
 ]
 
 { #category : #ui }
@@ -119,7 +136,7 @@ GraphView >> drawEdge: anEdge from: aFromNodeElement to: aToNodeElement [
 	anEdgeElement := self directedCurvedEdge.
 	anEdgeElement graph beEdge.
 	anEdgeElement graph model: aGtGraphEdge.
-
+	
 	anEdgeElement fromAnchor: (BlNearestPositionEllipseAnchor
 		referenceElement: aFromNodeElement
 		relatedTo: aToNodeElement).
@@ -127,7 +144,9 @@ GraphView >> drawEdge: anEdge from: aFromNodeElement to: aToNodeElement [
 		referenceElement: aToNodeElement
 		relatedTo: aFromNodeElement).
 
-	self addChild: anEdgeElement
+	self addChild: anEdgeElement.
+	
+	^ anEdgeElement
 ]
 
 { #category : #ui }
@@ -192,6 +211,13 @@ GraphView >> updateTokens: numberOfTokens at: aNodeElement [
 		token background: Color black.
 		token size: 7@7.
 		aNodeElement addChild: token ].
+]
+
+{ #category : #ui }
+GraphView >> updateWeightOf: anEdgeElement with: newWeight [
+	| textElement |
+	textElement := anEdgeElement children detect: [ :eachElement | eachElement class = BlTextElement ].
+	textElement text: newWeight asRopedText.
 ]
 
 { #category : #ui }

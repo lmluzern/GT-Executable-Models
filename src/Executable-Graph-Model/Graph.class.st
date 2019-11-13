@@ -14,6 +14,7 @@ Class {
 		'nodes',
 		'edges',
 		'places',
+		'weights',
 		'transitions',
 		'tokens',
 		'currentState',
@@ -45,7 +46,9 @@ Graph class >> egEmptyEditor [
 Graph >> addEdgeFrom: nodeA to: nodeB [
 	(edges includes: (nodeA->nodeB)) ifTrue: [ ^ 0 ].
 	(((transitions includes: nodeA) and: (places includes: nodeB)) or:
-		((places includes: nodeA) and: (transitions includes: nodeB))) ifTrue: [ ^ self edges add: (nodeA->nodeB) ].
+		((places includes: nodeA) and: (transitions includes: nodeB))) ifTrue: [
+			self weights at: (nodeA->nodeB) put: 1.
+			^ self edges add: (nodeA->nodeB) ].
 	(((transitions includes: nodeA) or: (places includes: nodeB)) or: ((places includes: nodeA) or: (transitions includes: nodeB))) ifTrue: [ ^ 0].
 	^ self edges add: (nodeA->nodeB)
 ]
@@ -105,7 +108,8 @@ Graph >> deleteConnectedEdgesOf: aNode [
 
 { #category : #'as yet unclassified' }
 Graph >> deleteEdge: anEdge [
-	edges remove: anEdge ifAbsent: [ ]
+	edges remove: anEdge ifAbsent: [ ].
+	weights removeKey: anEdge ifAbsent: [ ]
 ]
 
 { #category : #utilities }
@@ -129,8 +133,8 @@ Graph >> edges: anObject [
 
 { #category : #'public interface' }
 Graph >> fireTransition: aTransition [
-	(self predecessorOf: aTransition) do: [ :place | tokens at: place put: (tokens at: place) - 1 ].
-	(self successorOf: aTransition) do: [ :place | tokens at: place put: (tokens at: place) + 1 ].
+	(self predecessorOf: aTransition) do: [ :place | tokens at: place put: (tokens at: place) - (weights at: (place->aTransition)) ].
+	(self successorOf: aTransition) do: [ :place | tokens at: place put: (tokens at: place) + (weights at: (aTransition->place)) ].
 
 
 ]
@@ -151,6 +155,7 @@ Graph >> initialize [
 	places := OrderedCollection new.
 	transitions := OrderedCollection new.
 	tokens := OrderedDictionary new.
+	weights := OrderedDictionary new.
 	currentState := 0.
 	selectedNode := 0.
 	debug := 0.
@@ -160,7 +165,7 @@ Graph >> initialize [
 Graph >> isEnabled: aTransition [
 	(transitions includes: aTransition) ifFalse: [ ^false ].
 	((self predecessorOf: aTransition) isEmpty or: (self successorOf: aTransition) isEmpty) ifTrue: [ ^false ].
-	(((self predecessorOf: aTransition) select: [ :place | (tokens at: place) <= 0 ]) isNotEmpty) ifTrue: [^false].
+	(((self predecessorOf: aTransition) select: [ :place | (tokens at: place) < (weights at: (place->aTransition))]) isNotEmpty) ifTrue: [^false].
 	^true
 
 
@@ -232,4 +237,14 @@ Graph >> transitions: anObject [
 { #category : #'building - graph' }
 Graph >> view [
 	^ GraphView new viewFor: self.
+]
+
+{ #category : #accessing }
+Graph >> weights [
+	^ weights
+]
+
+{ #category : #accessing }
+Graph >> weights: anObject [
+	weights := anObject
 ]
