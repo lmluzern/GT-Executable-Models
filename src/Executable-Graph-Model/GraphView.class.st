@@ -24,15 +24,23 @@ GraphView >> addEventsToNode: aNode [
 { #category : #ui }
 GraphView >> addWeightTo: anEdgeElement with: weight [
 	
-	anEdgeElement addChild:
+	weight > 0 ifTrue: [ 
+		anEdgeElement addChild:
 		(BlTextElement new
-			text: weight asRopedText;
-			background: Color white;
-			padding: (BlInsets all: 5);
-			constraintsDo: [ :c |
-				c ignoreByLayout. 
-				c ignored horizontal alignCenter.
-				c ignored vertical alignCenter]).
+		text: weight asRopedText;
+		background: Color white;
+		padding: (BlInsets all: 5);
+		constraintsDo: [ :c |
+			c ignoreByLayout. 
+			c ignored horizontal alignCenter.
+			c ignored vertical alignCenter]).
+		]
+	
+]
+
+{ #category : #accessing }
+GraphView >> allEdgeElements [
+	^ self children select: [ :eachElement | eachElement graph isEdge ]
 ]
 
 { #category : #accessing }
@@ -244,6 +252,14 @@ GraphView >> viewFor: aGraph [
 	
 	aGraph addDependent: controller.
 	self drawEdges: aGraph edges.
+	
+	aGraph debug: self.
+	self allEdgeElements do: [ :eachEdgeElement |
+		| fromNode toNode |
+		fromNode := (eachEdgeElement graph model fromElement) graph model.
+		toNode := (eachEdgeElement graph model toElement) graph model.
+		self addWeightTo: eachEdgeElement with: (aGraph weights at: (fromNode -> toNode)) 
+		].
 	
 	self children ifNotEmpty: [ 
 		"self layout: GtGraphWeightedCircleLayout new"

@@ -29,8 +29,7 @@ GraphController >> addEdge: aNodeElement [
 			anEdge ~= 0 ifTrue: [
 				| anEdgeElement |
 				anEdgeElement := view drawEdge: anEdge.
-				((graph places includes: node) or: (graph transitions includes: node)) ifTrue: [
-					view addWeightTo: anEdgeElement with: (graph weights at: anEdge) ]
+				view addWeightTo: anEdgeElement with: (graph weights at: anEdge)
 				 ].
 			
 			graph selectedNode: 0.

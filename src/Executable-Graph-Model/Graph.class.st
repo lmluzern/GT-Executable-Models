@@ -50,6 +50,7 @@ Graph >> addEdgeFrom: nodeA to: nodeB [
 			self weights at: (nodeA->nodeB) put: 1.
 			^ self edges add: (nodeA->nodeB) ].
 	(((transitions includes: nodeA) or: (places includes: nodeB)) or: ((places includes: nodeA) or: (transitions includes: nodeB))) ifTrue: [ ^ 0].
+	self weights at: (nodeA->nodeB) put: 0.
 	^ self edges add: (nodeA->nodeB)
 ]
 
