@@ -60,14 +60,6 @@ GraphController >> addPlaceAt: mousePosition [
 ]
 
 { #category : #'api - adding' }
-GraphController >> addTokenAt: aNode [
-	| node |
-	node := aNode graph model.
-	self view updateTokens: (graph tokens at: node put: (graph tokens at: node) + 1) at: aNode
-
-]
-
-{ #category : #'api - adding' }
 GraphController >> addTransitionAt: mousePosition [
 	self view drawTransitions: (self graph addTransition) asOrderedCollection.
 	self relocateLastNode: mousePosition
@@ -221,7 +213,7 @@ GraphController >> openNodeMenuFor: aNode [
 	menu add: 'Set as initial state' selector: #setInitialState: argument: aNode.
 	menu add: 'Delete node' selector: #deleteNode: argument: aNode.
 	(graph places includes: node) ifTrue:[
-		menu add: 'Add token' selector: #addTokenAt: argument: aNode.
+		menu add: 'Set number of tokens' selector: #setNumberOfTokensAt: argument: aNode.
 		].
 	(graph isEnabled: node) ifTrue:[
 		menu add: 'Fire transition' selector: #fireTransition: argument: aNode.
@@ -274,6 +266,17 @@ GraphController >> setCurrentStateColor [
 { #category : #'model interaction' }
 GraphController >> setInitialState: aNode [
 	graph currentState: aNode graph model.
+]
+
+{ #category : #'api - adding' }
+GraphController >> setNumberOfTokensAt: aNode [
+	| node numberOfTokens|
+	node := aNode graph model.
+	
+	numberOfTokens := (UIManager default request: 'Set number of tokens:') asInteger.
+	numberOfTokens ifNotNil: [ 
+		self view updateTokens: (graph tokens at: node put: numberOfTokens ) at: aNode
+		]
 ]
 
 { #category : #updating }
