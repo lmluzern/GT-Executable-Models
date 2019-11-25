@@ -197,6 +197,21 @@ Graph >> nodes: obj [
 	nodes := obj.
 ]
 
+{ #category : #'as yet unclassified' }
+Graph >> petriNetExample [
+	<gtExample>	
+	self addPlace.
+	self addTransition.
+	self addPlace.
+	self addTransition.
+	
+	self addEdgeFrom: 1 to: 2.
+	self addEdgeFrom: 2 to: 3.
+	self addEdgeFrom: 3 to: 4. 
+	self addEdgeFrom: 4 to: 1. 
+	^ self
+]
+
 { #category : #accessing }
 Graph >> places [
 	^ places

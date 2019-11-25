@@ -225,11 +225,19 @@ GraphView >> updateWeightOf: anEdgeElement with: newWeight [
 
 { #category : #ui }
 GraphView >> viewFor: aGraph [
+	| nodeList |
+	nodeList := aGraph nodes copy.
+	nodeList removeAll: aGraph transitions.
+	nodeList removeAll: aGraph places.
+	
 	self constraintsDo: [ :c |
 		c horizontal matchParent.
 		c vertical matchParent ].
-
-	self drawNodes: aGraph nodes.
+	
+	self drawNodes: nodeList.
+	self drawTransitions: aGraph transitions.
+	self drawPlaces: aGraph places with: aGraph tokens. 
+	
 	
 	"TODO"
 	controller := GraphController new initializeModel: aGraph andView: self.
