@@ -139,6 +139,21 @@ Graph >> fireTransition: aTransition [
 
 ]
 
+{ #category : #'as yet unclassified' }
+Graph >> fsaExample [
+	<gtExample>
+	6 timesRepeat: [ self addNode ].
+	self addEdgeFrom: 1 to: 2.
+	self addEdgeFrom: 1 to: 3.
+	self addEdgeFrom: 2 to: 5.
+	self addEdgeFrom: 2 to: 4.
+	self addEdgeFrom: 3 to: 5.
+	self addEdgeFrom: 3 to: 4.
+	self addEdgeFrom: 5 to: 6.
+	self addEdgeFrom: 4 to: 6.
+	^ self
+]
+
 { #category : #ui }
 Graph >> gtElement: aView [
 	<gtView>

@@ -233,4 +233,8 @@ GraphView >> viewFor: aGraph [
 	
 	aGraph addDependent: controller.
 	self drawEdges: aGraph edges.
+	
+	self children ifNotEmpty: [ 
+		self layout: GtGraphWeightedCircleLayout new
+		 ]
 ]
