@@ -137,21 +137,6 @@ GraphController >> graph: anObject [
 	graph := anObject
 ]
 
-{ #category : #'api - adding' }
-GraphController >> increaseWeightOf: anEdgeElement [
-	| fromNode toNode |
-	fromNode := (anEdgeElement graph model fromElement) graph model.
-	toNode := (anEdgeElement graph model toElement) graph model.
-	
-	graph weights at: (fromNode->toNode) ifPresent: [
-		graph weights at: (fromNode->toNode) put: (graph weights at: (fromNode->toNode)) + 1.
-		view updateWeightOf: anEdgeElement with: (graph weights at: (fromNode->toNode))
-		].
-
-	self graph debug: anEdgeElement.
-
-]
-
 { #category : #initialization }
 GraphController >> initializeModel: aGraph andView: aView [
 	graph := aGraph.
@@ -200,7 +185,7 @@ GraphController >> openEdgeMenuFor: anEdge [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Delete edge' selector: #deleteEdge: argument: anEdge.
-	menu add: 'Increase weight' selector: #increaseWeightOf: argument: anEdge.
+	menu add: 'Set weight' selector: #setWeightOf: argument: anEdge.
 	menu popUpInWorld
 ]
 
@@ -277,6 +262,24 @@ GraphController >> setNumberOfTokensAt: aNode [
 	numberOfTokens ifNotNil: [ 
 		self view updateTokens: (graph tokens at: node put: numberOfTokens ) at: aNode
 		]
+]
+
+{ #category : #'api - adding' }
+GraphController >> setWeightOf: anEdgeElement [
+	| fromNode toNode newWeight |
+	fromNode := (anEdgeElement graph model fromElement) graph model.
+	toNode := (anEdgeElement graph model toElement) graph model.
+	
+	graph weights at: (fromNode->toNode) ifPresent: [
+		newWeight := (UIManager default request: 'Set new weight:') asInteger.
+		newWeight ifNotNil: [ 
+			graph weights at: (fromNode->toNode) put: newWeight.
+			view updateWeightOf: anEdgeElement with: (graph weights at: (fromNode->toNode))
+			 ]
+		].
+
+	self graph debug: anEdgeElement.
+
 ]
 
 { #category : #updating }
