@@ -151,6 +151,7 @@ Graph >> fsaExample [
 	self addEdgeFrom: 3 to: 4.
 	self addEdgeFrom: 5 to: 6.
 	self addEdgeFrom: 4 to: 6.
+	self currentState: 1.
 	^ self
 ]
 

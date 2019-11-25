@@ -27,9 +27,11 @@ GraphView >> addWeightTo: anEdgeElement with: weight [
 	anEdgeElement addChild:
 		(BlTextElement new
 			text: weight asRopedText;
-			constraintsDo: [ :c | 
-				c frame horizontal alignCenter.
-				c frame vertical alignCenter]).
+			padding: (BlInsets all: 5);
+			constraintsDo: [ :c |
+				c ignoreByLayout. 
+				c ignored horizontal alignCenter.
+				c ignored vertical alignCenter]).
 ]
 
 { #category : #accessing }
