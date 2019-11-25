@@ -27,6 +27,7 @@ GraphView >> addWeightTo: anEdgeElement with: weight [
 	anEdgeElement addChild:
 		(BlTextElement new
 			text: weight asRopedText;
+			background: Color white;
 			padding: (BlInsets all: 5);
 			constraintsDo: [ :c |
 				c ignoreByLayout. 
@@ -237,6 +238,7 @@ GraphView >> viewFor: aGraph [
 	self drawEdges: aGraph edges.
 	
 	self children ifNotEmpty: [ 
-		self layout: GtGraphWeightedCircleLayout new
+		"self layout: GtGraphWeightedCircleLayout new"
+		self layout: GtGraphTreeLayout new
 		 ]
 ]
