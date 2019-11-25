@@ -195,7 +195,7 @@ GraphView >> findEdgeElementFor: aGtGraphEdge [
 
 { #category : #'as yet unclassified' }
 GraphView >> findNodeElementFor: aNode [
-	^ self children detect: [ :eachElement | eachElement graph model = aNode ]
+	^ self children detect: [ :eachElement | eachElement graph model = aNode ] ifNone: [  ]
 ]
 
 { #category : #ui }

@@ -35,6 +35,7 @@ GraphController >> addEdge: aNodeElement [
 			
 			graph selectedNode: 0.
 			selectedNode background: Color white.
+			self update: graph.
 			]
 		ifFalse: [
 			graph selectedNode: node.
@@ -144,7 +145,7 @@ GraphController >> graph: anObject [
 	graph := anObject
 ]
 
-{ #category : #'api - deleting' }
+{ #category : #'api - adding' }
 GraphController >> increaseWeightOf: anEdgeElement [
 	| fromNode toNode |
 	fromNode := (anEdgeElement graph model fromElement) graph model.
@@ -167,6 +168,8 @@ GraphController >> initializeModel: aGraph andView: aView [
 		
 	view when: BlMouseDownEvent do: [ :event |
 		event secondaryButtonPressed ifTrue: [ self openSecondaryMenuWith: event localPosition ].].
+	
+	self update: graph.
 ]
 
 { #category : #'view control' }
@@ -178,9 +181,10 @@ GraphController >> liveColor [
 GraphController >> markSuccessorStates [
 	| successors |
 	successors := self graph successorOf: self graph currentState.
+	
 	view allNodeElements
 		select: [ :node | successors includes: node graph model ]
-		thenDo: [ :node | node background: Color blue ]
+		thenDo: [ :node | node background: Color orange ]
 ]
 
 { #category : #'model interaction' }
@@ -191,7 +195,7 @@ GraphController >> nodeColor [
 		
 ]
 
-{ #category : #initialization }
+{ #category : #gui }
 GraphController >> onClick: aNodeElement [
 	| node |
 	node := aNodeElement graph model.
@@ -199,7 +203,7 @@ GraphController >> onClick: aNodeElement [
 		ifTrue: [ graph currentState: node.].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #gui }
 GraphController >> openEdgeMenuFor: anEdge [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
@@ -208,7 +212,7 @@ GraphController >> openEdgeMenuFor: anEdge [
 	menu popUpInWorld
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #gui }
 GraphController >> openNodeMenuFor: aNode [
 	| menu node |
 	node := aNode graph model.
@@ -227,14 +231,14 @@ GraphController >> openNodeMenuFor: aNode [
 	
 ]
 
-{ #category : #'model interaction' }
+{ #category : #gui }
 GraphController >> openPrimaryMenuWith: aGraphElement [
 	(aGraphElement graph isNode)
 		ifTrue: [ self openNodeMenuFor: aGraphElement ]
 		ifFalse: [ self openEdgeMenuFor: aGraphElement ].
 ]
 
-{ #category : #'model interaction' }
+{ #category : #gui }
 GraphController >> openSecondaryMenuWith: mousePosition [
 	| menu |
 	menu := MenuMorph new defaultTarget: self .
@@ -257,21 +261,19 @@ GraphController >> relocateLastNode: mousePosition [
 
 ]
 
-{ #category : #initialization }
+{ #category : #'model interaction' }
 GraphController >> setCurrentStateColor [
 	| aCurrentStateNodeElement |
 
 	aCurrentStateNodeElement := view findNodeElementFor: graph currentState.
-	self clearAllStates.
-	graph selectedNode: 0.
-
-	aCurrentStateNodeElement background: self nodeColor
+	aCurrentStateNodeElement ifNotNil: [
+		aCurrentStateNodeElement background: self nodeColor
+	 ]
 ]
 
-{ #category : #initialization }
+{ #category : #'model interaction' }
 GraphController >> setInitialState: aNode [
 	graph currentState: aNode graph model.
-	self setCurrentStateColor.
 ]
 
 { #category : #updating }
@@ -279,16 +281,6 @@ GraphController >> update: aGraph [
 	self clearAllStates.
 	self markSuccessorStates.
 	self setCurrentStateColor.
-]
-
-{ #category : #'as yet unclassified' }
-GraphController >> updateEdges [
-	| edges |
-	edges := view mondrian root children select: [ :element | element graph isEdge ].
-	edges do: [ :edge | view mondrian root removeChild: edge ].
-	
-	view drawEdges: graph edges.
-	
 ]
 
 { #category : #accessing }
