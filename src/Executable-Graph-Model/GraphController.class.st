@@ -124,7 +124,9 @@ GraphController >> fireTransition: aTransition [
 	
 	(graph successorOf: node) do:
 		[ :eachSuccessor |
-		self view updateTokens: (graph tokens at: eachSuccessor) at: (self view findNodeElementFor: eachSuccessor) ]
+		self view updateTokens: (graph tokens at: eachSuccessor) at: (self view findNodeElementFor: eachSuccessor) ].
+	
+	self markTransitions.
 ]
 
 { #category : #accessing }
@@ -173,7 +175,7 @@ GraphController >> markTransitions [
 		select: [ :node | transitions includes: node graph model ]
 		thenDo: [ :node |
 			(graph isEnabled: node graph model)
-				ifTrue: [ node background: Color green ]
+				ifTrue: [ node background: self liveColor ]
 				ifFalse: [ node background: Color white ]
 			 ]
 ]
@@ -275,7 +277,9 @@ GraphController >> setNumberOfTokensAt: aNode [
 	numberOfTokens := (UIManager default request: 'Set number of tokens:') asInteger.
 	numberOfTokens ifNotNil: [ 
 		self view updateTokens: (graph tokens at: node put: numberOfTokens ) at: aNode
-		]
+		].
+	
+	self markTransitions
 ]
 
 { #category : #'api - adding' }
@@ -292,7 +296,7 @@ GraphController >> setWeightOf: anEdgeElement [
 			 ]
 		].
 
-	self graph debug: anEdgeElement.
+	self markTransitions.
 
 ]
 
@@ -301,6 +305,7 @@ GraphController >> update: aGraph [
 	self clearAllStates.
 	self markSuccessorStates.
 	self setCurrentStateColor.
+	self markTransitions.
 ]
 
 { #category : #accessing }
