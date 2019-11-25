@@ -165,6 +165,20 @@ GraphController >> markSuccessorStates [
 ]
 
 { #category : #'model interaction' }
+GraphController >> markTransitions [
+	| transitions |
+	transitions := self graph transitions.
+	
+	view allNodeElements
+		select: [ :node | transitions includes: node graph model ]
+		thenDo: [ :node |
+			(graph isEnabled: node graph model)
+				ifTrue: [ node background: Color green ]
+				ifFalse: [ node background: Color white ]
+			 ]
+]
+
+{ #category : #'model interaction' }
 GraphController >> nodeColor [
 	(self graph successorOf: self graph currentState) isEmpty
 		ifTrue: [ ^self deadColor ]
