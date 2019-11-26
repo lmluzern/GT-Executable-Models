@@ -248,6 +248,14 @@ Graph >> successorOf: aNode [
 	^(self edges select: [ :edge | edge key = aNode ]) collect: [ :edge | edge value ]
 ]
 
+{ #category : #tests }
+Graph >> test [
+<gtExample>
+self nodes: #(1 2 3 4 5 6) asOrderedCollection.
+
+
+]
+
 { #category : #accessing }
 Graph >> tokens [
 	^ tokens

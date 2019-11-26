@@ -110,6 +110,16 @@ GraphController >> deleteNode: aNodeElement [
 	aNodeElement removeFromParent
 ]
 
+{ #category : #'model interaction' }
+GraphController >> exportGraph [
+	| exportString orderedCollection |
+	orderedCollection := ' asOrderedCollection.'.
+	
+	exportString := '<gtExample>', String cr.
+	exportString := exportString, 'self nodes: ', (graph nodes asArray) asString, orderedCollection,String cr.
+	Transcript show: exportString; cr.
+]
+
 { #category : #utilities }
 GraphController >> fireTransition: aTransition [
 	| node |
@@ -237,6 +247,7 @@ GraphController >> openSecondaryMenuWith: mousePosition [
 	menu add: 'Add new node' selector: #addNodeAt: argument: mousePosition.
 	menu add: 'Add new transition' selector: #addTransitionAt: argument: mousePosition.
 	menu add: 'Add new place' selector: #addPlaceAt: argument: mousePosition.
+	menu add: 'Export graph' selector: #exportGraph.
 	controllerMode == 0 ifTrue: [ menu add: 'Switch to executable FSA Model' selector: #controllerMode: argument:1.].
 	controllerMode == 1 ifTrue: [ menu add: 'Switch to Graph Editor' selector: #controllerMode: argument:0.].
 	menu popUpInWorld
