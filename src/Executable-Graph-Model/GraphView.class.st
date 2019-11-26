@@ -263,6 +263,9 @@ GraphView >> viewFor: aGraph [
 	
 	self children ifNotEmpty: [ 
 		"self layout: GtGraphWeightedCircleLayout new"
-		self layout: GtGraphTreeLayout new
+		| l |
+		l := GtGraphCircleLayout new.
+		l radius: 200.
+		self layout: l
 		 ]
 ]

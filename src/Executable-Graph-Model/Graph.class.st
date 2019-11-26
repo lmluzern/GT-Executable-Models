@@ -206,6 +206,8 @@ Graph >> petriNetExample [
 	self addPlace.
 	self addTransition.
 	
+	self tokens at: 1 put: 3.
+	
 	self addEdgeFrom: 1 to: 2.
 	self addEdgeFrom: 2 to: 3.
 	self addEdgeFrom: 3 to: 4. 
