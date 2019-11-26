@@ -264,13 +264,13 @@ Graph >> successorOf: aNode [
 Graph >> test [
 <gtExample>
 self nodes: #(1 2 3 4) asOrderedCollection.
-self places: #(3 4) asOrderedCollection.
-self transitions: #(1 2) asOrderedCollection.
-self edges: {3->1. 1->4. 4->2. 2->3} asOrderedCollection.
+self places: #(1 2 4) asOrderedCollection.
+self transitions: #(3) asOrderedCollection.
+self edges: {1->3. 2->3. 3->4} asOrderedCollection.
 self currentState: 0.
-self weights: {(3->1)->2.(1->4)->1.(4->2)->1.(2->3)->1} asOrderedDictionary.
-self tokens: { 3->3. 4->0} asOrderedDictionary.
-self nodeLocations: { 1->(228.0@14.0). 2->(228.0@85.0). 3->(102.0@49.0). 4->(337.0@48.0)} asOrderedDictionary.
+self weights: {(1->3)->2.(2->3)->1.(3->4)->1} asOrderedDictionary.
+self tokens: { 1->2. 2->2. 4->0} asOrderedDictionary.
+self nodeLocations: { 1->(322.0@173.0). 2->(323.0@264.0). 3->(506.0@221.0). 4->(645.0@219.0)} asOrderedDictionary.
 
 
 ]

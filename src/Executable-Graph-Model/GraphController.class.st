@@ -80,6 +80,13 @@ GraphController >> controllerMode: anObject [
 	controllerMode := anObject
 ]
 
+{ #category : #'model interaction' }
+GraphController >> createGraphExample [
+	| aMethodName|
+	aMethodName := (UIManager default request: 'Set method name:').
+	Graph compile: (self exportGraph: aMethodName).
+]
+
 { #category : #'view control' }
 GraphController >> deadColor [
 	^ Color red
@@ -111,12 +118,13 @@ GraphController >> deleteNode: aNodeElement [
 ]
 
 { #category : #'model interaction' }
-GraphController >> exportGraph [
+GraphController >> exportGraph: aMethodName [
 	| exportString orderedCollection orderedDictionary |
 	orderedCollection := ' asOrderedCollection.'.
 	orderedDictionary := ' asOrderedDictionary.'.
+	exportString := ''.
 	
-	exportString := 'test', String cr.
+	exportString := aMethodName, String cr.
 	exportString := exportString, '<gtExample>', String cr.
 	exportString := exportString, 'self nodes: ', (graph nodes asArray) asString, orderedCollection,String cr.
 	exportString := exportString, 'self places: ', (graph places asArray) asString, orderedCollection,String cr.
@@ -141,8 +149,8 @@ GraphController >> exportGraph [
 		' ', eachNodeElement graph model asString, '->', eachNodeElement measuredBounds position asString ])
 	joinUsing: '.'),'}',
 	orderedDictionary,String cr.
-	
-	Transcript show: exportString; cr.
+		
+	^ exportString 
 ]
 
 { #category : #utilities }
@@ -272,10 +280,16 @@ GraphController >> openSecondaryMenuWith: mousePosition [
 	menu add: 'Add new node' selector: #addNodeAt: argument: mousePosition.
 	menu add: 'Add new transition' selector: #addTransitionAt: argument: mousePosition.
 	menu add: 'Add new place' selector: #addPlaceAt: argument: mousePosition.
-	menu add: 'Export graph' selector: #exportGraph.
+	menu add: 'Print graph' selector: #printGraph.
+	menu add: 'Create graph example' selector: #createGraphExample.
 	controllerMode == 0 ifTrue: [ menu add: 'Switch to executable FSA Model' selector: #controllerMode: argument:1.].
 	controllerMode == 1 ifTrue: [ menu add: 'Switch to Graph Editor' selector: #controllerMode: argument:0.].
 	menu popUpInWorld
+]
+
+{ #category : #'model interaction' }
+GraphController >> printGraph [
+	Transcript show: (self exportGraph: 'none')
 ]
 
 { #category : #'api - adding' }
