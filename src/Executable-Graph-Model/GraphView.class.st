@@ -23,19 +23,19 @@ GraphView >> addEventsToNode: aNode [
 
 { #category : #ui }
 GraphView >> addWeightTo: anEdgeElement with: weight [
+	| edgeLable |
+	edgeLable := (BlTextElement new
+	text: weight asRopedText;
+	background: Color white;
+	padding: (BlInsets all: 5);
+	constraintsDo: [ :c |
+		c ignoreByLayout. 
+		c ignored horizontal alignCenter.
+		c ignored vertical alignCenter]).
 	
-	weight > 0 ifTrue: [ 
-		anEdgeElement addChild:
-		(BlTextElement new
-		text: weight asRopedText;
-		background: Color white;
-		padding: (BlInsets all: 5);
-		constraintsDo: [ :c |
-			c ignoreByLayout. 
-			c ignored horizontal alignCenter.
-			c ignored vertical alignCenter]).
-		]
+	weight < 1 ifTrue: [ edgeLable visibility: BlVisibility hidden ].
 	
+	anEdgeElement addChild: edgeLable.
 ]
 
 { #category : #accessing }
@@ -229,6 +229,10 @@ GraphView >> updateWeightOf: anEdgeElement with: newWeight [
 	| textElement |
 	textElement := anEdgeElement children detect: [ :eachElement | eachElement class = BlTextElement ].
 	textElement text: newWeight asRopedText.
+	
+	newWeight < 1
+		ifTrue: [ textElement visibility: BlVisibility hidden ]
+		ifFalse: [ textElement visibility: BlVisibility visible ]
 ]
 
 { #category : #ui }
