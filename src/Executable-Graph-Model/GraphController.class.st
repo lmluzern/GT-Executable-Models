@@ -8,7 +8,6 @@ Class {
 		'graph',
 		'view',
 		'selectedNode',
-		'controllerMode',
 		'executable'
 	],
 	#category : #'Executable-Graph-Model'
@@ -69,16 +68,6 @@ GraphController >> addTransitionAt: mousePosition [
 { #category : #'model interaction' }
 GraphController >> clearAllStates [
 	view allNodeElements do: [ :eachNodeElement | eachNodeElement background: Color white ]
-]
-
-{ #category : #accessing }
-GraphController >> controllerMode [
-	^ controllerMode
-]
-
-{ #category : #accessing }
-GraphController >> controllerMode: anObject [
-	controllerMode := anObject
 ]
 
 { #category : #'model interaction' }
@@ -196,7 +185,6 @@ GraphController >> graph: anObject [
 GraphController >> initializeModel: aGraph andView: aView [
 	graph := aGraph.
 	view := aView.
-	controllerMode := 0.
 	executable := false.
 		
 	view when: BlMouseDownEvent do: [ :event |
