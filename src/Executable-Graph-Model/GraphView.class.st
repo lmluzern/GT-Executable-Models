@@ -257,7 +257,6 @@ GraphView >> viewFor: aGraph [
 	aGraph addDependent: controller.
 	self drawEdges: aGraph edges.
 	
-	aGraph debug: self.
 	self allEdgeElements do: [ :eachEdgeElement |
 		| fromNode toNode |
 		fromNode := (eachEdgeElement graph model fromElement) graph model.
@@ -265,11 +264,9 @@ GraphView >> viewFor: aGraph [
 		self addWeightTo: eachEdgeElement with: (aGraph weights at: (fromNode -> toNode)) 
 		].
 	
-	self children ifNotEmpty: [ 
-		"self layout: GtGraphWeightedCircleLayout new"
-		| l |
-		l := GtGraphCircleLayout new.
-		l radius: 200.
-		self layout: l
+	aGraph nodeLocations ifNotEmpty: [ 
+		aGraph nodeLocations associations do: [ :nodeLocation |
+			(self findNodeElementFor: nodeLocation key) relocate: nodeLocation value
+			 ]
 		 ]
 ]

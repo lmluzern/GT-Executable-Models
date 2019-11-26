@@ -19,7 +19,8 @@ Class {
 		'tokens',
 		'currentState',
 		'selectedNode',
-		'debug'
+		'debug',
+		'nodeLocations'
 	],
 	#category : #'Executable-Graph-Model'
 }
@@ -189,6 +190,16 @@ Graph >> isEnabled: aTransition [
 ]
 
 { #category : #accessing }
+Graph >> nodeLocations [
+	^ nodeLocations
+]
+
+{ #category : #accessing }
+Graph >> nodeLocations: anObject [
+	nodeLocations := anObject
+]
+
+{ #category : #accessing }
 Graph >> nodes [
 	^ nodes
 ]
@@ -251,13 +262,14 @@ Graph >> successorOf: aNode [
 { #category : #tests }
 Graph >> test [
 <gtExample>
-self nodes: #(1 2 3 4) asOrderedCollection.
-self places: #(1 3) asOrderedCollection.
-self transitions: #(2 4) asOrderedCollection.
-self edges: {1->2. 2->3. 3->4. 4->1} asOrderedCollection.
+self nodes: #(1 2 3) asOrderedCollection.
+self places: #() asOrderedCollection.
+self transitions: #() asOrderedCollection.
+self edges: {3->2. 3->1} asOrderedCollection.
 self currentState: 0.
-self weights: {(1->2)->1.(2->3)->1.(3->4)->1.(4->1)->1} asOrderedDictionary.
-self tokens: { 1->3. 3->0} asOrderedDictionary.
+self weights: {(3->2)->0.(3->1)->0} asOrderedDictionary.
+self tokens: {} asOrderedDictionary.
+self nodeLocations: { 1->(45.0@11.0). 2->(194.0@41.0). 3->(122.0@143.0)} asOrderedDictionary.
 ]
 
 { #category : #accessing }
