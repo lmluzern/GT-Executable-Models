@@ -174,6 +174,7 @@ Graph >> initialize [
 	transitions := OrderedCollection new.
 	tokens := OrderedDictionary new.
 	weights := OrderedDictionary new.
+	nodeLocations := OrderedDictionary new.
 	currentState := 0.
 	selectedNode := 0.
 	debug := 0.
@@ -262,14 +263,16 @@ Graph >> successorOf: aNode [
 { #category : #tests }
 Graph >> test [
 <gtExample>
-self nodes: #(1 2 3) asOrderedCollection.
-self places: #() asOrderedCollection.
-self transitions: #() asOrderedCollection.
-self edges: {3->2. 3->1} asOrderedCollection.
+self nodes: #(1 2 3 4) asOrderedCollection.
+self places: #(3 4) asOrderedCollection.
+self transitions: #(1 2) asOrderedCollection.
+self edges: {3->1. 1->4. 4->2. 2->3} asOrderedCollection.
 self currentState: 0.
-self weights: {(3->2)->0.(3->1)->0} asOrderedDictionary.
-self tokens: {} asOrderedDictionary.
-self nodeLocations: { 1->(45.0@11.0). 2->(194.0@41.0). 3->(122.0@143.0)} asOrderedDictionary.
+self weights: {(3->1)->2.(1->4)->1.(4->2)->1.(2->3)->1} asOrderedDictionary.
+self tokens: { 3->3. 4->0} asOrderedDictionary.
+self nodeLocations: { 1->(228.0@14.0). 2->(228.0@85.0). 3->(102.0@49.0). 4->(337.0@48.0)} asOrderedDictionary.
+
+
 ]
 
 { #category : #accessing }
