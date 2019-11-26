@@ -15,9 +15,10 @@ GraphView >> addEventsToNode: aNode [
 	aNode
 		addEventHandlerOn: BlClickEvent do: [ :event |
 			event primaryButtonPressed ifTrue: [ 
-				controller controllerMode == 0
-					ifTrue: [ controller openPrimaryMenuWith: aNode ]
-					ifFalse: [ controller onClick: aNode ]]].
+				controller executable
+					ifTrue: [ controller onClick: aNode ]
+					ifFalse: [ controller openPrimaryMenuWith: aNode ]
+					]].
 	
 ]
 
@@ -113,8 +114,8 @@ GraphView >> directedCurvedEdge [
 		zIndex: 1;
 		addEventHandlerOn: BlClickEvent do: [ :event |
 			event primaryButtonPressed ifTrue: [ 
-				controller controllerMode == 0
-					ifTrue: [ controller openPrimaryMenuWith: edge ]]];
+				controller executable
+					ifFalse: [ controller openPrimaryMenuWith: edge ]]];
 		border: (BlBorder paint: Color black width: self defaultWidth);
 		toHead:
 			(BlArrowheadSimpleArrow new

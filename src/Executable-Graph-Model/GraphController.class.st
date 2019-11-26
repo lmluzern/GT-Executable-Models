@@ -8,7 +8,8 @@ Class {
 		'graph',
 		'view',
 		'selectedNode',
-		'controllerMode'
+		'controllerMode',
+		'executable'
 	],
 	#category : #'Executable-Graph-Model'
 }
@@ -117,6 +118,16 @@ GraphController >> deleteNode: aNodeElement [
 	aNodeElement removeFromParent
 ]
 
+{ #category : #accessing }
+GraphController >> executable [
+	^ executable
+]
+
+{ #category : #accessing }
+GraphController >> executable: anObject [
+	executable := anObject
+]
+
 { #category : #'model interaction' }
 GraphController >> exportGraph: aMethodName [
 	| exportString orderedCollection orderedDictionary |
@@ -186,6 +197,7 @@ GraphController >> initializeModel: aGraph andView: aView [
 	graph := aGraph.
 	view := aView.
 	controllerMode := 0.
+	executable := false.
 		
 	view when: BlMouseDownEvent do: [ :event |
 		event secondaryButtonPressed ifTrue: [ self openSecondaryMenuWith: event localPosition ].].
@@ -236,6 +248,10 @@ GraphController >> onClick: aNodeElement [
 	node := aNodeElement graph model.
 	((graph successorOf: graph currentState) includes: node)
 		ifTrue: [ graph currentState: node.].
+		
+	(graph isEnabled: node) ifTrue:[
+		self fireTransition: aNodeElement
+		].
 ]
 
 { #category : #gui }
@@ -258,9 +274,6 @@ GraphController >> openNodeMenuFor: aNode [
 	(graph places includes: node) ifTrue:[
 		menu add: 'Set number of tokens' selector: #setNumberOfTokensAt: argument: aNode.
 		].
-	(graph isEnabled: node) ifTrue:[
-		menu add: 'Fire transition' selector: #fireTransition: argument: aNode.
-		].
 	
 	menu popUpInWorld
 	
@@ -282,8 +295,9 @@ GraphController >> openSecondaryMenuWith: mousePosition [
 	menu add: 'Add new place' selector: #addPlaceAt: argument: mousePosition.
 	menu add: 'Print graph' selector: #printGraph.
 	menu add: 'Create graph example' selector: #createGraphExample.
-	controllerMode == 0 ifTrue: [ menu add: 'Switch to executable FSA Model' selector: #controllerMode: argument:1.].
-	controllerMode == 1 ifTrue: [ menu add: 'Switch to Graph Editor' selector: #controllerMode: argument:0.].
+	executable
+		ifTrue: [ menu add: 'Switch to graph editor' selector: #executable: argument:false.]
+		ifFalse: [ menu add: 'Switch to execution mode' selector: #executable: argument:true.].
 	menu popUpInWorld
 ]
 
