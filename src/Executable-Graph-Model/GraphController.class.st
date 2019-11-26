@@ -245,9 +245,9 @@ GraphController >> onClick: aNodeElement [
 { #category : #gui }
 GraphController >> openEdgeMenuFor: anEdge [
 	| menu |
-	menu := MenuMorph new defaultTarget: self .
-	menu add: 'Delete edge' selector: #deleteEdge: argument: anEdge.
+	menu := MenuMorph new defaultTarget: self.
 	menu add: 'Set weight' selector: #setWeightOf: argument: anEdge.
+	menu add: 'Delete edge' selector: #deleteEdge: argument: anEdge.
 	menu popUpInWorld
 ]
 
@@ -257,11 +257,15 @@ GraphController >> openNodeMenuFor: aNode [
 	node := aNode graph model.
 	menu := MenuMorph new defaultTarget: self .
 	menu add: 'Add edge from current selected node' selector: #addEdge: argument: aNode.
-	menu add: 'Set as initial state' selector: #setInitialState: argument: aNode.
-	menu add: 'Delete node' selector: #deleteNode: argument: aNode.
-	(graph places includes: node) ifTrue:[
-		menu add: 'Set number of tokens' selector: #setNumberOfTokensAt: argument: aNode.
+	((graph places includes: node) or: (graph transitions includes: node))
+	ifFalse: [ 
+		menu add: 'Set as initial state' selector: #setInitialState: argument: aNode
+		 ].
+	(graph places includes: node)
+	ifTrue:[
+		menu add: 'Set number of tokens' selector: #setNumberOfTokensAt: argument: aNode
 		].
+	menu add: 'Delete node' selector: #deleteNode: argument: aNode.
 	
 	menu popUpInWorld
 	
