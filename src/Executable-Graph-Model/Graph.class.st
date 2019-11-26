@@ -251,9 +251,13 @@ Graph >> successorOf: aNode [
 { #category : #tests }
 Graph >> test [
 <gtExample>
-self nodes: #(1 2 3 4 5 6) asOrderedCollection.
-
-
+self nodes: #(1 2 3 4) asOrderedCollection.
+self places: #(1 3) asOrderedCollection.
+self transitions: #(2 4) asOrderedCollection.
+self edges: {1->2. 2->3. 3->4. 4->1} asOrderedCollection.
+self currentState: 0.
+self weights: {(1->2)->1.(2->3)->1.(3->4)->1.(4->1)->1} asOrderedDictionary.
+self tokens: { 1->3. 3->0} asOrderedDictionary.
 ]
 
 { #category : #accessing }

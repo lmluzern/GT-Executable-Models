@@ -112,11 +112,30 @@ GraphController >> deleteNode: aNodeElement [
 
 { #category : #'model interaction' }
 GraphController >> exportGraph [
-	| exportString orderedCollection |
+	| exportString orderedCollection orderedDictionary |
 	orderedCollection := ' asOrderedCollection.'.
+	orderedDictionary := ' asOrderedDictionary.'.
 	
-	exportString := '<gtExample>', String cr.
+	exportString := 'test', String cr.
+	exportString := exportString, '<gtExample>', String cr.
 	exportString := exportString, 'self nodes: ', (graph nodes asArray) asString, orderedCollection,String cr.
+	exportString := exportString, 'self places: ', (graph places asArray) asString, orderedCollection,String cr.
+	exportString := exportString, 'self transitions: ', (graph transitions asArray) asString, orderedCollection,String cr.
+	exportString := exportString, 'self edges: ', (graph edges asArray) asString, orderedCollection,String cr.
+	exportString := exportString, 'self currentState: ', (graph currentState) asString,'.',String cr.
+	
+	exportString := exportString, 'self weights: ',
+	'{',((graph weights associations collect: [ :element |
+		'(',element key asString,')', '->', element value asString ])
+	joinUsing: '.'),'}',
+	orderedDictionary,String cr.
+	
+	exportString := exportString, 'self tokens: ',
+	'{',((graph tokens associations collect: [ :element |
+		' ', element key asString, '->', element value asString ])
+	joinUsing: '.'),'}',
+	orderedDictionary,String cr.
+	
 	Transcript show: exportString; cr.
 ]
 
