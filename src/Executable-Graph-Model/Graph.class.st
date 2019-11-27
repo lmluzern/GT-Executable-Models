@@ -21,7 +21,8 @@ Class {
 		'selectedNode',
 		'debug',
 		'nodeLocations',
-		'nodeSizes'
+		'nodeSizes',
+		'edgeCurvatures'
 	],
 	#category : #'Executable-Graph-Model'
 }
@@ -124,7 +125,7 @@ Graph >> deleteNode: aNode [
 	self deleteConnectedEdgesOf: aNode.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #example }
 Graph >> diningPhilosophersExample [
 <gtExample>
 self nodes: #(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20) asOrderedCollection.
@@ -136,7 +137,18 @@ self weights: {(12->5)->1.(12->1)->1.(13->1)->1.(13->2)->1.(14->3)->1.(14->2)->1
 self tokens: { 11->1. 12->1. 13->1. 14->1. 15->1. 16->0. 17->0. 18->0. 19->0. 20->0} asOrderedDictionary.
 self nodeLocations: { 1->(434.0@523.0). 2->(891.0@533.0). 3->(965.0@198.0). 4->(649.0@10.0). 5->(345.0@190.0). 6->(596.0@342.0). 7->(559.0@245.0). 8->(734.0@341.0). 9->(751.0@244.0). 10->(653.0@200.0). 11->(482.0@85.0). 12->(391.0@334.0). 13->(671.0@509.0). 14->(939.0@338.0). 15->(829.0@86.0). 16->(516.0@425.0). 17->(443.0@198.0). 18->(658.0@90.0). 19->(868.0@198.0). 20->(817.0@421.0)} asOrderedDictionary.
 self nodeSizes: { 1->(60.0@15.0). 2->(60.0@15.0). 3->(60.0@15.0). 4->(60.0@15.0). 5->(60.0@15.0). 6->(60.0@15.0). 7->(60.0@15.0). 8->(60.0@15.0). 9->(60.0@15.0). 10->(60.0@15.0). 11->(50.0@50.0). 12->(50.0@50.0). 13->(50.0@50.0). 14->(50.0@50.0). 15->(50.0@50.0). 16->(50.0@50.0). 17->(50.0@50.0). 18->(50.0@50.0). 19->(50.0@50.0). 20->(50.0@50.0)} asOrderedDictionary.
+self edgeCurvatures: {(12->5)->0.(12->1)->0.(13->1)->0.(13->2)->0.(14->3)->0.(14->2)->0.(15->4)->0.(15->3)->0.(11->4)->0.(11->5)->0.(6->12)->0.(6->13)->0.(8->13)->0.(8->14)->0.(9->15)->0.(9->14)->0.(10->15)->0.(10->11)->0.(7->11)->0.(7->12)->0.(1->16)->0.(16->6)->0.(2->20)->0.(20->8)->0.(3->19)->0.(19->9)->0.(4->18)->0.(18->10)->0.(5->17)->0.(17->7)->0} asOrderedDictionary.
 
+]
+
+{ #category : #accessing }
+Graph >> edgeCurvatures [
+	^ edgeCurvatures
+]
+
+{ #category : #accessing }
+Graph >> edgeCurvatures: anObject [
+	edgeCurvatures := anObject
 ]
 
 { #category : #accessing }
@@ -157,20 +169,20 @@ Graph >> fireTransition: aTransition [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #example }
 Graph >> fsaExample [
-	<gtExample>
-	6 timesRepeat: [ self addNode ].
-	self addEdgeFrom: 1 to: 2.
-	self addEdgeFrom: 1 to: 3.
-	self addEdgeFrom: 2 to: 5.
-	self addEdgeFrom: 2 to: 4.
-	self addEdgeFrom: 3 to: 5.
-	self addEdgeFrom: 3 to: 4.
-	self addEdgeFrom: 5 to: 6.
-	self addEdgeFrom: 4 to: 6.
-	self currentState: 1.
-	^ self
+<gtExample>
+self nodes: #(1 2 3 4 5 6 7 8 9 10) asOrderedCollection.
+self places: #() asOrderedCollection.
+self transitions: #() asOrderedCollection.
+self edges: {1->2. 2->3. 3->2. 3->4. 5->6. 5->7. 6->8. 7->9. 9->10. 8->10. 6->9. 7->8} asOrderedCollection.
+self currentState: 1.
+self weights: {(1->2)->0.(2->3)->0.(3->2)->0.(3->4)->0.(5->6)->0.(5->7)->0.(6->8)->0.(7->9)->0.(9->10)->0.(8->10)->0.(6->9)->0.(7->8)->0} asOrderedDictionary.
+self tokens: {} asOrderedDictionary.
+self nodeLocations: { 1->(375.0@138.0). 2->(275.0@217.0). 3->(185.0@130.0). 4->(282.0@59.0). 5->(578.0@141.0). 6->(681.0@49.0). 7->(691.0@229.0). 8->(826.0@47.0). 9->(832.0@229.0). 10->(949.0@131.0)} asOrderedDictionary.
+self nodeSizes: { 1->(50.0@50.0). 2->(50.0@50.0). 3->(50.0@50.0). 4->(50.0@50.0). 5->(50.0@50.0). 6->(50.0@50.0). 7->(50.0@50.0). 8->(50.0@50.0). 9->(50.0@50.0). 10->(50.0@50.0)} asOrderedDictionary.
+self edgeCurvatures: {(1->2)->0.3.(2->3)->0.3.(3->2)->0.3.(3->4)->0.3.(5->6)->0.(5->7)->0.(6->8)->0.(7->9)->0.(9->10)->0.(8->10)->0.(6->9)->0.(7->8)->0} asOrderedDictionary.
+
 ]
 
 { #category : #ui }
@@ -192,6 +204,7 @@ Graph >> initialize [
 	weights := OrderedDictionary new.
 	nodeLocations := OrderedDictionary new.
 	nodeSizes := OrderedDictionary new.
+	edgeCurvatures := OrderedDictionary new.
 	currentState := 0.
 	selectedNode := 0.
 	debug := 0.
@@ -237,23 +250,6 @@ Graph >> nodes: obj [
 	nodes := obj.
 ]
 
-{ #category : #'as yet unclassified' }
-Graph >> petriNetExample [
-	<gtExample>	
-	self addPlace.
-	self addTransition.
-	self addPlace.
-	self addTransition.
-	
-	self tokens at: 1 put: 3.
-	
-	self addEdgeFrom: 1 to: 2.
-	self addEdgeFrom: 2 to: 3.
-	self addEdgeFrom: 3 to: 4. 
-	self addEdgeFrom: 4 to: 1. 
-	^ self
-]
-
 { #category : #accessing }
 Graph >> places [
 	^ places
@@ -285,21 +281,6 @@ Graph >> selectedNode: anObject [
 { #category : #'public interface' }
 Graph >> successorOf: aNode [
 	^(self edges select: [ :edge | edge key = aNode ]) collect: [ :edge | edge value ]
-]
-
-{ #category : #tests }
-Graph >> test [
-<gtExample>
-self nodes: #(1 2 3 4) asOrderedCollection.
-self places: #(1 2 4) asOrderedCollection.
-self transitions: #(3) asOrderedCollection.
-self edges: {1->3. 2->3. 3->4} asOrderedCollection.
-self currentState: 0.
-self weights: {(1->3)->2.(2->3)->1.(3->4)->1} asOrderedDictionary.
-self tokens: { 1->2. 2->2. 4->0} asOrderedDictionary.
-self nodeLocations: { 1->(322.0@173.0). 2->(323.0@264.0). 3->(506.0@221.0). 4->(645.0@219.0)} asOrderedDictionary.
-
-
 ]
 
 { #category : #accessing }

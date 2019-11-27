@@ -206,6 +206,15 @@ GraphView >> drawTransitions: nodeList [
 		aNodeElement ])
 ]
 
+{ #category : #ui }
+GraphView >> edgeElementToAssociation: anEdgeElement [
+		| fromNode toNode |
+		fromNode := (anEdgeElement graph model fromElement) graph model.
+		toNode := (anEdgeElement graph model toElement) graph model.
+		
+		^ (fromNode -> toNode)
+]
+
 { #category : #'as yet unclassified' }
 GraphView >> findEdgeElementFor: aGtGraphEdge [
 	^ self children detect: [ :eachElement | eachElement graph model = aGtGraphEdge ]
@@ -268,7 +277,9 @@ GraphView >> viewFor: aGraph [
 		| fromNode toNode |
 		fromNode := (eachEdgeElement graph model fromElement) graph model.
 		toNode := (eachEdgeElement graph model toElement) graph model.
-		self addWeightTo: eachEdgeElement with: (aGraph weights at: (fromNode -> toNode)) 
+		self addWeightTo: eachEdgeElement with: (aGraph weights at: (fromNode -> toNode)).
+		
+		eachEdgeElement curvatureFraction: (aGraph edgeCurvatures at: (fromNode -> toNode))
 		].
 	
 	aGraph nodeLocations ifNotEmpty: [ 

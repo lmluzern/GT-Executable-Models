@@ -155,6 +155,12 @@ GraphController >> exportGraph: aMethodName [
 		' ', eachNodeElement graph model asString, '->', eachNodeElement size asString ])
 	joinUsing: '.'),'}',
 	orderedDictionary,String cr.
+	
+	exportString := exportString, 'self edgeCurvatures: ',
+	'{',((view allEdgeElements collect: [ :eachEdgeElement |
+		'(',(view edgeElementToAssociation: eachEdgeElement) asString,')', '->', eachEdgeElement curvatureAnchor curvatureFraction asString ])
+	joinUsing: '.'),'}',
+	orderedDictionary,String cr.
 		
 	^ exportString 
 ]
