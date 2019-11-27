@@ -93,6 +93,11 @@ GraphView >> borderRectangle [
 ]
 
 { #category : #ui }
+GraphView >> defaultCurvatureFraction [
+	^ 0.3
+]
+
+{ #category : #ui }
 GraphView >> defaultNodeSize [
 	^ 50@50
 ]
@@ -110,8 +115,9 @@ GraphView >> defaultWidth [
 { #category : #ui }
 GraphView >> directedCurvedEdge [
 	| edge |
-	edge := BlLineElement new
+	edge := BlParabollaArcElement new
 		zIndex: 1;
+		curvatureFraction: 0;
 		addEventHandlerOn: BlClickEvent do: [ :event |
 			event primaryButtonPressed ifTrue: [ 
 				controller executable

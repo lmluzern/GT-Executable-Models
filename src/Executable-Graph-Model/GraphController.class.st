@@ -253,6 +253,7 @@ GraphController >> openEdgeMenuFor: anEdge [
 	| menu |
 	menu := MenuMorph new defaultTarget: self.
 	menu add: 'Set weight' selector: #setWeightOf: argument: anEdge.
+	menu add: 'Transform to curved' selector: #transformToCurved: argument: anEdge.
 	menu add: 'Delete edge' selector: #deleteEdge: argument: anEdge.
 	menu popUpInWorld
 ]
@@ -367,6 +368,12 @@ GraphController >> setWeightOf: anEdgeElement [
 		].
 
 	self markTransitions.
+
+]
+
+{ #category : #'api - adding' }
+GraphController >> transformToCurved: anEdgeElement [
+	anEdgeElement curvatureFraction: view defaultCurvatureFraction.
 
 ]
 
