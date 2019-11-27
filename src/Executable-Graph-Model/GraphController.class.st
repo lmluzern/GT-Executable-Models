@@ -218,7 +218,7 @@ GraphController >> markTransitions [
 		thenDo: [ :node |
 			(graph isEnabled: node graph model)
 				ifTrue: [ node background: self liveColor ]
-				ifFalse: [ node background: Color white ]
+				ifFalse: [ node background: self deadColor ]
 			 ]
 ]
 
@@ -265,6 +265,10 @@ GraphController >> openNodeMenuFor: aNode [
 	ifTrue:[
 		menu add: 'Set number of tokens' selector: #setNumberOfTokensAt: argument: aNode
 		].
+	(graph transitions includes: node)
+	ifTrue:[
+		menu add: 'Rotate' selector: #rotateTransition: argument: aNode.
+		].
 	menu add: 'Delete node' selector: #deleteNode: argument: aNode.
 	
 	menu popUpInWorld
@@ -307,6 +311,11 @@ GraphController >> relocateLastNode: mousePosition [
 
 	^ blNode
 
+]
+
+{ #category : #'api - adding' }
+GraphController >> rotateTransition: aTransitionElement [
+	aTransitionElement size: (aTransitionElement size) y @ (aTransitionElement size) x
 ]
 
 { #category : #'model interaction' }

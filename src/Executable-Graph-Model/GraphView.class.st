@@ -99,7 +99,7 @@ GraphView >> defaultNodeSize [
 
 { #category : #'as yet unclassified' }
 GraphView >> defaultTransitionSize [
-	^ 35@50
+	^ 15@60
 ]
 
 { #category : #ui }
