@@ -90,8 +90,8 @@ GraphController >> deleteEdge: anEdgeElement [
 	
 	graph deleteEdge: (aGtGraphEdge fromElement graph model -> aGtGraphEdge toElement graph model).
 	
-	aGtGraphEdge fromElement constraints graph removeConnectedEdge: aGtGraphEdge.
-	aGtGraphEdge toElement constraints graph removeConnectedEdge: aGtGraphEdge.
+	"aGtGraphEdge fromElement constraints graph removeConnectedEdge: aGtGraphEdge.
+	aGtGraphEdge toElement constraints graph removeConnectedEdge: aGtGraphEdge."
 	
 	anEdgeElement removeFromParent
 ]
