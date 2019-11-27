@@ -20,7 +20,8 @@ Class {
 		'currentState',
 		'selectedNode',
 		'debug',
-		'nodeLocations'
+		'nodeLocations',
+		'nodeSizes'
 	],
 	#category : #'Executable-Graph-Model'
 }
@@ -175,6 +176,7 @@ Graph >> initialize [
 	tokens := OrderedDictionary new.
 	weights := OrderedDictionary new.
 	nodeLocations := OrderedDictionary new.
+	nodeSizes := OrderedDictionary new.
 	currentState := 0.
 	selectedNode := 0.
 	debug := 0.
@@ -198,6 +200,16 @@ Graph >> nodeLocations [
 { #category : #accessing }
 Graph >> nodeLocations: anObject [
 	nodeLocations := anObject
+]
+
+{ #category : #accessing }
+Graph >> nodeSizes [
+	^ nodeSizes
+]
+
+{ #category : #accessing }
+Graph >> nodeSizes: anObject [
+	nodeSizes := anObject
 ]
 
 { #category : #accessing }

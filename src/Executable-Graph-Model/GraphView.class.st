@@ -269,5 +269,11 @@ GraphView >> viewFor: aGraph [
 		aGraph nodeLocations associations do: [ :nodeLocation |
 			(self findNodeElementFor: nodeLocation key) relocate: nodeLocation value
 			 ]
+		 ].
+	
+	aGraph nodeSizes ifNotEmpty: [ 
+		aGraph nodeSizes associations do: [ :nodeSize |
+			(self findNodeElementFor: nodeSize key) size: nodeSize value
+			 ]
 		 ]
 ]

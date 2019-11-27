@@ -149,6 +149,12 @@ GraphController >> exportGraph: aMethodName [
 		' ', eachNodeElement graph model asString, '->', eachNodeElement measuredBounds position asString ])
 	joinUsing: '.'),'}',
 	orderedDictionary,String cr.
+	
+	exportString := exportString, 'self nodeSizes: ',
+	'{',((view allNodeElements collect: [ :eachNodeElement |
+		' ', eachNodeElement graph model asString, '->', eachNodeElement size asString ])
+	joinUsing: '.'),'}',
+	orderedDictionary,String cr.
 		
 	^ exportString 
 ]
