@@ -1,11 +1,39 @@
 "
-I represent the logic of different graph models (e.g. Finite State Automaton). Further the interactive graph editor is based on me.
+I represent the basic graph model which consists of nodes and edges. The Interactive Graph Editor is based on me. Further I represent the logic of a directed graph, a Finite State Automata (FSA) and a Petri Net.
 
-To create your own graph and add semantic to the given graph, run:
 
+Interactive Graph Editor
+
+To create your own graph, inspect:
 	Graph new
+Switch to the _GT tab, where you can create a graph and add semantics.
 
-Switch to the _GT tab, where you can create a graph and add semantics (right & left click).
+Use right click to:
+- add different nodes (basic node, transition, place)
+- create a graph example, i.e. export the created graph as an example method that is added to the graph model
+- switch to execution mode, where you can fire transitions (Petri Net) and select successor states (FSA) with left click
+
+Use left click on nodes to:
+- delete the node
+- select the node for adding a new edge (from/to)
+- set node as initial state (FSA)
+- set number of tokens (place)
+- ...
+
+Use left click on edges to:
+- delete the edge
+- set the weight
+- ... 
+
+
+To see a graphical representation of an FSA, inspect the following example and switch to _GT tab.
+Switch to execution mode (right click), then you can select successor states (left click on successor node).
+	Graph new fsaExample	
+	
+		
+To see a graphical representation of a Petri Net inspect the following example and switch to _GT tab.
+Switch to the execution mode (right click), then you can fire enabled transitions (left click).
+	Graph new diningPhilosophersExample
 "
 Class {
 	#name : #Graph,
