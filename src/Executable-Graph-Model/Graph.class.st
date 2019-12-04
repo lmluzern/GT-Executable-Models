@@ -9,21 +9,19 @@ To create your own graph, inspect:
 Switch to the _GT tab, where you can create a graph and add semantics.
 
 Use right click to:
-- add different nodes (basic node, transition, place)
-- create a graph example, i.e. export the created graph as an example method that is added to the graph model
-- switch to execution mode, where you can fire transitions (Petri Net) and select successor states (FSA) with left click
+	- add different nodes (basic node, transition, place)
+	- create a graph example, i.e. export the created graph as an example method that is added to the graph model
+	- switch to execution mode, where you can fire transitions (Petri Net) and select successor states (FSA) with left click
 
 Use left click on nodes to:
-- delete the node
-- select the node for adding a new edge (from/to)
-- set node as initial state (FSA)
-- set number of tokens (place)
-- ...
+	- delete the node
+	- select the node for adding a new edge (from/to)
+	- set node as initial state (FSA)
+	- set number of tokens (place)
 
 Use left click on edges to:
-- delete the edge
-- set the weight
-- ... 
+	- delete the edge
+	- set the weight
 
 
 To see a graphical representation of an FSA, inspect the following example and switch to _GT tab.
@@ -353,11 +351,6 @@ Graph >> transitions [
 { #category : #accessing }
 Graph >> transitions: anObject [
 	transitions := anObject
-]
-
-{ #category : #'building - graph' }
-Graph >> view [
-	^ GraphView new viewFor: self.
 ]
 
 { #category : #accessing }

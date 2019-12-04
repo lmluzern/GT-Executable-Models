@@ -1,6 +1,23 @@
 "
-This class handles events/clicks etc.
+I represent the controller for a GraphView of a Graph.
 
+I get invoked in GraphView>>#viewFor:
+
+I gather mouse click events from the GraphView and perform different actions:
+	- on right click open the menu for adding new graph elements -> GraphController>>#openScondaryMenuWith:
+	- on left click on graph elements open the menu for editing graph elements -> GraphController>>#openPrimaryMenuWith:
+	- on left click on nodes (if execution mode is on) request a transition -> GraphController>>#onClick:
+I color the states of the FSA as follows:
+	- current state green; red, if FSA is dead
+	- possible successor states orange
+I color the enabled transitions green and the rest red.
+I update the view if the model accepts the requested transition:
+	- update state colors (FSA)
+	- update transition colors (Petri Net)
+	- update number of tokens (Petri Net)
+I export a GraphView as code and add it to the Graph as an example method, see GraphController>>#createGraphExample
+
+	
 Bug report (node deletion):
 
 To reproduce the bug, inspect the following example and switch to _GT tab.
@@ -12,8 +29,8 @@ Expected behavior: node 3 and all connected edges disappear
 Actual behavior: NotFound exception ...
 
 invoked methods:
-- GraphController>>#deleteNode:
-- GraphController>>#deleteEdge:
+	- GraphController>>#deleteNode:
+	- GraphController>>#deleteEdge:
 "
 Class {
 	#name : #GraphController,

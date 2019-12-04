@@ -1,5 +1,7 @@
 "
-This class visualizes graphs.
+I build a view of a Graph and glue it to a GraphController.
+I am a canvas and graph elements are added to me as children, e.g. GraphView>>#drawNodes:
+I get invoked in Graph>>#gtElement:
 "
 Class {
 	#name : #GraphView,
