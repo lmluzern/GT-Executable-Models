@@ -34,6 +34,14 @@ Switch to execution mode (right click), then you can select successor states (le
 To see a graphical representation of a Petri Net inspect the following example and switch to _GT tab.
 Switch to the execution mode (right click), then you can fire enabled transitions (left click).
 	Graph new diningPhilosophersExample
+
+
+Bug report (view):
+
+To reproduce the bug, inspect the following example and switch to _GT tab.
+If you switch back to the Raw tab and then back to the _GT, a greyed out window appears.
+	Graph new
+
 "
 Class {
 	#name : #Graph,
