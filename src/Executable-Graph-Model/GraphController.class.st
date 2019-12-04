@@ -1,5 +1,19 @@
 "
 This class handles events/clicks etc.
+
+Bug report (node deletion):
+
+To reproduce the bug, inspect the following example and switch to _GT tab.
+Deleting node 3 (left click -> Delete node) will cause an error. 
+
+	Graph new nodeDeletionBug 
+
+Expected behavior: node 3 and all connected edges disappear
+Actual behavior: NotFound exception ...
+
+invoked methods:
+- GraphController>>#deleteNode:
+- GraphController>>#deleteEdge:
 "
 Class {
 	#name : #GraphController,
@@ -90,8 +104,8 @@ GraphController >> deleteEdge: anEdgeElement [
 	
 	graph deleteEdge: (aGtGraphEdge fromElement graph model -> aGtGraphEdge toElement graph model).
 	
-	"aGtGraphEdge fromElement constraints graph removeConnectedEdge: aGtGraphEdge.
-	aGtGraphEdge toElement constraints graph removeConnectedEdge: aGtGraphEdge."
+	aGtGraphEdge fromElement constraints graph removeConnectedEdge: aGtGraphEdge.
+	aGtGraphEdge toElement constraints graph removeConnectedEdge: aGtGraphEdge.
 	
 	anEdgeElement removeFromParent
 ]

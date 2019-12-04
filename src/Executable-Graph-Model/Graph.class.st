@@ -248,6 +248,22 @@ Graph >> isEnabled: aTransition [
 
 ]
 
+{ #category : #'as yet unclassified' }
+Graph >> nodeDeletionBug [
+<gtExample>
+self nodes: #(1 2 3 4) asOrderedCollection.
+self places: #() asOrderedCollection.
+self transitions: #() asOrderedCollection.
+self edges: {1->3. 3->2. 4->2} asOrderedCollection.
+self currentState: 0.
+self weights: {(1->3)->0.(3->2)->0.(4->2)->0} asOrderedDictionary.
+self tokens: {} asOrderedDictionary.
+self nodeLocations: { 1->(65.0@30.0). 2->(65.0@115.0). 3->(171.0@48.0). 4->(154.0@154.0)} asOrderedDictionary.
+self nodeSizes: { 1->(50.0@50.0). 2->(50.0@50.0). 3->(50.0@50.0). 4->(50.0@50.0)} asOrderedDictionary.
+self edgeCurvatures: {(1->3)->0.(3->2)->0.(4->2)->0} asOrderedDictionary.
+
+]
+
 { #category : #accessing }
 Graph >> nodeLocations [
 	^ nodeLocations
