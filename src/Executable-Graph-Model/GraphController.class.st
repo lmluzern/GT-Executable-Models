@@ -5,7 +5,7 @@ I get invoked in GraphView>>#viewFor:
 
 I gather mouse click events from the GraphView and perform different actions:
 	- on right click open the menu for adding new graph elements -> GraphController>>#openScondaryMenuWith:
-	- on left click on graph elements open the menu for editing graph elements -> GraphController>>#openPrimaryMenuWith:
+	- on left click on graph elements open the menu for editing graph elements -> GraphController>>#openNodeMenuFor: and GraphController>>#openEdgeMenuFor:
 	- on left click on nodes (if execution mode is on) request a transition -> GraphController>>#onClick:
 I color the states of the FSA as follows:
 	- current state green; red, if FSA is dead
@@ -235,21 +235,19 @@ GraphController >> initializeModel: aGraph andView: aView [
 	
 	view addEventHandlerOn: BlClickEvent do: [ :event |
 		event primaryButtonPressed ifTrue: [
-			| graphElement |
-			graphElement := event target.
-			(graphElement parent graph isNode or: graphElement parent graph isEdge)
-			ifTrue: [ graphElement := graphElement parent ].
+			| aGraphElement |
+			aGraphElement := event target.
+			(aGraphElement parent graph isNode or: aGraphElement parent graph isEdge)
+			ifTrue: [ aGraphElement := aGraphElement parent ].
 			
-			graphElement graph isNode
+			aGraphElement graph isNode
 			ifTrue: [ self executable
-				ifTrue: [ self onClick: graphElement ]
-				ifFalse: [ self openNodeMenuFor: graphElement ]].
+				ifTrue: [ self onClick: aGraphElement ]
+				ifFalse: [ self openNodeMenuFor: aGraphElement ]].
 			
-			graphElement graph isEdge
+			aGraphElement graph isEdge
 			ifTrue: [ self executable
-				ifFalse: [ self openEdgeMenuFor: graphElement ]]]].
-	
-	
+				ifFalse: [ self openEdgeMenuFor: aGraphElement ]]]].
 	
 	self update: graph.
 ]
