@@ -233,6 +233,24 @@ GraphController >> initializeModel: aGraph andView: aView [
 	view when: BlMouseDownEvent do: [ :event |
 		event secondaryButtonPressed ifTrue: [ self openSecondaryMenuWith: event localPosition ].].
 	
+	view addEventHandlerOn: BlClickEvent do: [ :event |
+		event primaryButtonPressed ifTrue: [
+			| graphElement |
+			graphElement := event target.
+			(graphElement parent graph isNode or: graphElement parent graph isEdge)
+			ifTrue: [ graphElement := graphElement parent ].
+			
+			graphElement graph isNode
+			ifTrue: [ self executable
+				ifTrue: [ self onClick: graphElement ]
+				ifFalse: [ self openNodeMenuFor: graphElement ]].
+			
+			graphElement graph isEdge
+			ifTrue: [ self executable
+				ifFalse: [ self openEdgeMenuFor: graphElement ]]]].
+	
+	
+	
 	self update: graph.
 ]
 
@@ -317,13 +335,6 @@ GraphController >> openNodeMenuFor: aNode [
 	
 	menu popUpInWorld
 	
-]
-
-{ #category : #gui }
-GraphController >> openPrimaryMenuWith: aGraphElement [
-	(aGraphElement graph isNode)
-		ifTrue: [ self openNodeMenuFor: aGraphElement ]
-		ifFalse: [ self openEdgeMenuFor: aGraphElement ].
 ]
 
 { #category : #gui }

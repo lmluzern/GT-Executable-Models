@@ -6,23 +6,8 @@ I get invoked in Graph>>#gtElement:
 Class {
 	#name : #GraphView,
 	#superclass : #BlElement,
-	#instVars : [
-		'controller'
-	],
 	#category : #'Executable-Graph-Model'
 }
-
-{ #category : #accessing }
-GraphView >> addEventsToNode: aNode [
-	aNode
-		addEventHandlerOn: BlClickEvent do: [ :event |
-			event primaryButtonPressed ifTrue: [ 
-				controller executable
-					ifTrue: [ controller onClick: aNode ]
-					ifFalse: [ controller openPrimaryMenuWith: aNode ]
-					]].
-	
-]
 
 { #category : #ui }
 GraphView >> addWeightTo: anEdgeElement with: weight [
@@ -59,8 +44,6 @@ GraphView >> borderCircle [
 		geometry: BlCircle new;
 		size: self defaultNodeSize;
 		layout: GtGraphCirclePackLayout new.
-		"layout: BlFrameLayout new."
-		self addEventsToNode: node.
 		^ node.
 ]
 
@@ -79,7 +62,6 @@ GraphView >> borderCircleWithLabel: aString [
 					c frame horizontal alignCenter.
 					c frame vertical alignCenter ];
 				yourself).
-		self addEventsToNode: node.
 		^ node.
 ]
 
@@ -90,7 +72,6 @@ GraphView >> borderRectangle [
 		geometry: BlRectangle new;
 		size: self defaultTransitionSize;
 		border: (BlBorder paint: Color black width: self defaultWidth).
-		self addEventsToNode: node.
 		^ node.
 ]
 
@@ -120,10 +101,6 @@ GraphView >> directedCurvedEdge [
 	edge := BlParabollaArcElement new
 		zIndex: 1;
 		curvatureFraction: 0;
-		addEventHandlerOn: BlClickEvent do: [ :event |
-			event primaryButtonPressed ifTrue: [ 
-				controller executable
-					ifFalse: [ controller openPrimaryMenuWith: edge ]]];
 		border: (BlBorder paint: Color black width: self defaultWidth);
 		toHead:
 			(BlArrowheadSimpleArrow new
@@ -255,7 +232,7 @@ GraphView >> updateWeightOf: anEdgeElement with: newWeight [
 
 { #category : #ui }
 GraphView >> viewFor: aGraph [
-	| nodeList |
+	| nodeList controller |
 	nodeList := aGraph nodes copy.
 	nodeList removeAll: aGraph transitions.
 	nodeList removeAll: aGraph places.
@@ -268,11 +245,9 @@ GraphView >> viewFor: aGraph [
 	self drawTransitions: aGraph transitions.
 	self drawPlaces: aGraph places with: aGraph tokens. 
 	
-	
-	"TODO"
-	controller := GraphController new initializeModel: aGraph andView: self.
-	
+	controller:= GraphController new initializeModel: aGraph andView: self.
 	aGraph addDependent: controller.
+	
 	self drawEdges: aGraph edges.
 	
 	self allEdgeElements do: [ :eachEdgeElement |
